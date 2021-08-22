@@ -1,0 +1,11 @@
+# npm
+node_modules
+
+# production
+build
+
+# environment
+.env
+
+# logs
+*.log
