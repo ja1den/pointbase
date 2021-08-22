@@ -1,16 +1,28 @@
-# React Express Template
+# PointBase
 
-> My template for [React](https://reactjs.org/) projects.
+> Point tracking system for Sports Day.
 
 ## Introduction
 
-This is a template for [React](https://reactjs.org/) projects built with [TypeScript](https://www.typescriptlang.org/).
+This app is designed to manage and record points for school sports days.
 
-It includes an [Express](https://expressjs.com/) server for hosting a REST API.
-
-It uses [workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces) to manage dependencies, and includes a [Dockerfile](Dockerfile).
+It reads from a [MySQL](https://www.mysql.com/) database, and is built with [React](https://reactjs.org/) and [Express](https://expressjs.com/).
 
 ## Usage
+
+### Environment
+
+Create an `.env` file containing the following:
+
+```sh
+DB_HOST="127.0.0.1"
+DB_PORT=3306
+
+DB_USER="username"
+DB_PASS="password"
+```
+
+### Scripts
 
 Start [Create React App](https://create-react-app.dev/) in development mode.
 
@@ -53,7 +65,3 @@ Remove all `node_modules` directories.
 ```sh
 npm run clean
 ```
-
-## License
-
-[MIT](LICENSE)
