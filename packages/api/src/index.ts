@@ -7,8 +7,8 @@ import express from 'express';
 import 'colors';
 
 // Lib
+import sequelize from './lib/sequelize';
 import getPaths from './lib/getPaths';
-import { Server } from 'http';
 
 // Main
 async function main() {
@@ -21,6 +21,17 @@ async function main() {
 	const port = typeof args.port === 'number'
 		? args.port
 		: 3000;
+
+	// Sequelize
+	try {
+		await sequelize.authenticate();
+	} catch (e) {
+		console.error('Sequelize connection failed!'.red, e);
+		return;
+	}
+
+	// Load Models
+	require('./models/associate');
 
 	// Express
 	const app = express().use(express.json());
@@ -61,7 +72,7 @@ async function main() {
 	app.use(express.static(path.resolve(__dirname, '..', '..', 'client')));
 
 	// 404
-	app.use((_req, res) => res.sendFile(path.resolve(__dirname, '..', '..', 'client', 'index.html')));
+	app.use((_req, res) => res.status(404).end());
 
 	// Listen
 	app.listen(port, () => {

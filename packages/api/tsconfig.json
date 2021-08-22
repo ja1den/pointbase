@@ -10,12 +10,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"module": "commonjs",
 		"resolveJsonModule": true,
-		"baseUrl": ".",
-		"paths": {
-			"@lib/*": [
-				"../lib/src/*"
-			]
-		}
+		"baseUrl": "."
 	},
 	"exclude": [
 		"node_modules"
