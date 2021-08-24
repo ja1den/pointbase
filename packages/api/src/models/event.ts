@@ -24,7 +24,6 @@ import Class from './class';
 import House from './house';
 import Sport from './sport';
 import SportType from './sport_type';
-import User from './user';
 
 // Define Types
 interface EventProperties {
@@ -70,24 +69,16 @@ class Event extends Model<EventProperties, EventCreationProperties> implements E
 	public countSportTypes!: BelongsToManyCountAssociationsMixin;
 	public createSportType!: BelongsToManyCreateAssociationMixin<SportType>;
 
-	public getUsers!: BelongsToManyGetAssociationsMixin<User>;
-	public addUser!: BelongsToManyAddAssociationMixin<User, number>;
-	public hasUser!: BelongsToManyHasAssociationMixin<User, number>;
-	public countUsers!: BelongsToManyCountAssociationsMixin;
-	public createUser!: BelongsToManyCreateAssociationMixin<User>;
-
 	public readonly classes?: Class[];
 	public readonly houses?: House;
 	public readonly sports?: Sport;
 	public readonly sportTypes?: SportType[];
-	public readonly users?: User[];
 
 	public static associations: {
 		classes: Association<Event, Class>;
 		houses: Association<Event, House>;
 		sports: Association<Event, Sport>;
 		sportTypes: Association<Event, SportType>;
-		users: Association<Event, User>;
 	}
 }
 

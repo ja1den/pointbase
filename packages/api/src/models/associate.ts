@@ -7,7 +7,6 @@ import Result from './result';
 import SportType from './sport_type';
 import Sport from './sport';
 import Student from './student';
-import User from './user';
 
 // Define Associations
 ClassSport.belongsTo(Class, { foreignKey: { name: 'classId' } });
@@ -18,9 +17,6 @@ Sport.hasMany(ClassSport, { foreignKey: { name: 'sportId' } });
 
 Class.belongsTo(Event, { foreignKey: { name: 'eventId' } });
 Event.hasMany(Class, { foreignKey: { name: 'eventId' } });
-
-Class.belongsTo(User, { foreignKey: { name: 'userId' } });
-User.hasMany(Class, { foreignKey: { name: 'userId' } });
 
 House.belongsTo(Event, { foreignKey: { name: 'eventId' } });
 Event.hasMany(House, { foreignKey: { name: 'eventId' } });
@@ -51,9 +47,6 @@ Sport.belongsToMany(Class, { through: { model: ClassSport, unique: false }, fore
 
 Event.belongsToMany(SportType, { through: { model: Sport, unique: false }, foreignKey: { name: 'eventId' } });
 SportType.belongsToMany(Event, { through: { model: Sport, unique: false }, foreignKey: { name: 'sportTypeId' } });
-
-Event.belongsToMany(User, { through: { model: Class, unique: false }, foreignKey: { name: 'eventId' } });
-User.belongsToMany(Event, { through: { model: Class, unique: false }, foreignKey: { name: 'userId' } });
 
 Sport.belongsToMany(Student, { through: { model: Result, unique: false }, foreignKey: { name: 'sportId' } });
 Student.belongsToMany(Sport, { through: { model: Result, unique: false }, foreignKey: { name: 'studentId' } });

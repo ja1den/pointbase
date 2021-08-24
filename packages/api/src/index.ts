@@ -33,6 +33,16 @@ async function main() {
 	// Load Models
 	require('./models/associate');
 
+	// Sync
+	if (args.sync === true) {
+		console.log('Syncing the database.'.yellow);
+		console.log();
+
+		sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+		sequelize.sync({ force: true });
+		sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+	}
+
 	// Express
 	const app = express().use(express.json());
 
