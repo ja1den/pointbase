@@ -1,5 +1,5 @@
 // Import
-import { Sequelize } from 'sequelize';
+const { Sequelize } = require('sequelize');
 
 // Environment
 if (process.env.DB_NAME === undefined) {
@@ -26,10 +26,11 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 
 	define: {
 		underscored: true,
-		freezeTableName: true
+		freezeTableName: true,
+		timestamps: false
 	},
 	logging: false
 });
 
 // Export
-export default sequelize;
+module.exports = sequelize;

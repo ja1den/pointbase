@@ -1,12 +1,13 @@
 // Import
-import ClassSport from './class_sport';
-import Class from './class';
-import Event from './event';
-import House from './house';
-import Result from './result';
-import SportType from './sport_type';
-import Sport from './sport';
-import Student from './student';
+const ClassSport = require('./class_sport');
+const Class = require('./class');
+const Event = require('./event');
+const House = require('./house');
+const Result = require('./result');
+const SportType = require('./sport_type');
+const Sport = require('./sport');
+const Student = require('./student');
+const User = require('./user');
 
 // Define Associations
 ClassSport.belongsTo(Class, { foreignKey: { name: 'classId' } });

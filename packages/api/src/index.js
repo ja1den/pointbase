@@ -1,14 +1,17 @@
 // Import
-import path from 'path';
+const minimist = require('minimist');
+const path = require('path');
 
-import minimist from 'minimist';
-import express from 'express';
+const express = require('express');
+const session = require('express-session');
 
-import 'colors';
+const SessionStore = require('express-mysql-session');
+
+require('colors');
 
 // Lib
-import sequelize from './lib/sequelize';
-import getPaths from './lib/getPaths';
+const sequelize = require('./lib/sequelize');
+const passport = require('./lib/passport');
 
 // Main
 async function main() {
@@ -46,37 +49,22 @@ async function main() {
 	// Express
 	const app = express().use(express.json());
 
+	// Session
+	const connection = (await sequelize.connectionManager.getConnection()).promise();
+
+	app.use(session({
+		secret: 'pointbase',
+		store: new SessionStore({ schema: { tableName: 'session', columnNames: { session_id: 'id' } } }, connection),
+		resave: false,
+		saveUninitialized: false
+	}));
+
+	// Passport
+	app.use(passport.initialize());
+	app.use(passport.session());
+
 	// Load Routes
-	const routes: string[] = getPaths(path.resolve(__dirname, 'routes'));
-
-	for (const route of routes) {
-		// Route Name
-		let name = route.match(/routes(?<name>\/.+)\..+/)?.groups?.name!;
-
-		// Index Route
-		if (name.endsWith('index')) {
-			name = name.match(/(.+)\/index/)?.[1] ?? '';
-		}
-
-		// Route Parameters
-		const params = name.match(/\[.+?\]/g);
-
-		if (params !== null) {
-			for (const param of params) {
-				name = name.replace(param, ':' + param.match(/[^\[\]]+/));
-			}
-		}
-
-		// Import Method
-		const { default: method } = await import(route);
-
-		if (typeof method !== 'function') continue;
-
-		// Bind Route
-		app.all('/api' + name, method);
-	}
-
-	app.use('/api', (_req, res) => res.status(404).end());
+	app.use('/api', require('./controllers'));
 
 	// React
 	app.use(express.static(path.resolve(__dirname, '..', '..', 'client')));
@@ -91,8 +79,6 @@ async function main() {
 	});
 
 	// Handle Exit
-	for (const signal of ['SIGINT', 'SIGTERM', 'SIGUSR2'] as NodeJS.Signals[]) {
-		process.addListener(signal, () => process.exit());
-	}
+	['SIGINT', 'SIGTERM', 'SIGUSR2'].map(signal => process.addListener(signal, () => process.exit()));
 }
 main();

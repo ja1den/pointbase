@@ -4,7 +4,7 @@
 		"src"
 	],
 	"ext": "*",
-	"exec": "ts-node -r tsconfig-paths/register -r dotenv/config src/index.ts dotenv_config_path=../../.env --port 4000",
+	"exec": "node -r dotenv/config src/index.js dotenv_config_path=../../.env --port 4000",
 	"quiet": true,
 	"events": {
 		"restart": "echo"
