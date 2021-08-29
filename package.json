@@ -1,8 +1,7 @@
 {
-	"name": "react-express-template",
+	"name": "pointbase",
 	"version": "0.1.0",
 	"private": true,
-	"license": "MIT",
 	"author": "Jaiden Douglas",
 	"workspaces": [
 		"packages/*"
@@ -16,7 +15,6 @@
 		"postinstall": "patch-package"
 	},
 	"devDependencies": {
-		"patch-package": "^6.4.7",
 		"rimraf": "^3.0.2",
 		"sort-package-json": "^1.50.0"
 	}
