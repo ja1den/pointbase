@@ -11,8 +11,7 @@
 		"build": "scripts/build.sh",
 		"clean": "rimraf ./**/node_modules",
 		"kill": "scripts/kill.sh",
-		"lint": "sort-package-json package.json packages/*/package.json",
-		"postinstall": "patch-package"
+		"lint": "sort-package-json package.json packages/*/package.json"
 	},
 	"devDependencies": {
 		"rimraf": "^3.0.2",

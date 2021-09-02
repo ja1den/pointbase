@@ -66,13 +66,14 @@ async function main() {
 	// Load Routes
 	app.use('/api', require('./controllers'));
 
-	// Public
-	const public = path.resolve(__dirname, '..', '..', 'client');
+	// Root Path
+	const root = path.resolve(__dirname, '..', '..', 'client');
 
-	app.use(express.static(public));
+	// Root
+	app.use(express.static(root));
 
 	// 404
-	app.use((_req, res) => res.sendFile(path.resolve(public, 'index.html')));
+	app.use((_req, res) => res.sendFile('index.html', { root }));
 
 	// Listen
 	app.listen(port, () => {
