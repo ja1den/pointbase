@@ -1,0 +1,83 @@
+extends includes/layout.pug
+
+block append modals
+	#user-modal.modal.fade(tabindex='-1')
+		.modal-dialog
+			.modal-content
+				.modal-header
+					h5.modal-title Create User
+					button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+
+				.modal-body
+					form#user-form(novalidate)
+						.mb-3
+							label.form-label(for='user-name') Name
+							input#user-name.form-control(type='text', name='name', required)
+							.invalid-feedback Please enter a name.
+
+						.mb-3
+							label.form-label(for='user-email') Email
+							input#user-email.form-control(type='email', name='email', required)
+							.invalid-feedback Please enter a valid email address.
+
+						.mb-3
+							label.form-label.d-flex.align-items-center(for='user-password')
+								p.mb-0 Password&nbsp;
+								i.bi.bi-info-circle(style={ 'font-size': '0.75rem' }, tabindex='0', data-bs-toggle='popover', data-bs-trigger='hover focus', data-bs-content='Leave this field empty to keep the current password.')
+							input#user-password.form-control(type='password', name='password', minlength='5', required)
+							.invalid-feedback Please enter a valid password.
+
+						.mb-3
+							.form-check.form-check-inline
+									input#user-elevated.form-check-input(type='checkbox' name='elevated')
+									label.form-check-label(for='user-elevated') Elevated
+
+						p.text-danger.mb-0.d-none Duplicate name or email.
+
+				.modal-footer
+					button.btn.btn-secondary(type='button', data-bs-dismiss='modal') Close
+					button.btn.btn-primary(type='submit', form='user-form') Submit
+
+block content
+	mixin link(disabled)
+		a(class={ 'disabled': disabled }, tabindex=disabled && '-1', aria-disabled=disabled && 'true')&attributes(attributes): block
+
+	h4 Settings
+	p.text-muted Manage system accounts.
+
+	.table-responsive
+		table#user-table.table.table-striped.text-nowrap
+			thead.table-dark
+				tr
+					th(scope='col') Name
+					th(scope='col') Email
+					th(scope='col') Elevated
+					th(scope='col')
+						if user.elevated
+							a.link-light(href='about:blank', role='button', aria-label='Create Record', data-bs-toggle='modal', data-bs-target='#user-modal'): i.bi.bi-plus-square
+					if user.elevated && 1 < records.length
+						th(scope='col')
+
+			tbody
+				each record, index in records
+					tr(data-record-id=record.id)
+						td(style={ 'white-space': 'nowrap' })=record.name
+						td=record.email
+						td: i.bi(class=record.elevated ? 'bi-check' : 'bi-dash')
+						td(style={ 'width': 0 }): if user.elevated || user.id === record.id
+							a.link-dark(href='about:blank', role='button', aria-label='Update Record', data-bs-toggle='modal', data-bs-target='#user-modal', data-record-id=record.id, data-current=(user.id === record.id)): i.bi.bi-pencil
+						if user.elevated && 1 < records.length
+							td(style={ 'width': 0 }): if user.id !== record.id
+								a.link-dark(href='about:blank', role='button', aria-label='Delete Record', data-record-id=record.id): i.bi.bi-trash
+
+	nav.d-flex.align-items-center.pb-1(aria-label='Table Pagination')
+		+link((page === 1)).btn.btn-dark.me-2(href='?page=1', role='button'): i.bi.bi-chevron-double-left
+		+link((page === 1)).btn.btn-dark.me-auto(href='?page=' + (page - 1), role='button'): i.bi.bi-chevron-left
+
+		p.me-auto.mb-0 Page #[strong #{page}] of #[strong #{pages}]
+
+		+link((page === pages)).btn.btn-dark.me-2(href='?page=' + (page + 1), role='button'): i.bi.bi-chevron-right
+		+link((page === pages)).btn.btn-dark(href='?page=' + pages, role='button'): i.bi.bi-chevron-double-right
+
+block append scripts
+	script(src='/js/settings.js')

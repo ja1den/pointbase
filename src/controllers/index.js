@@ -4,15 +4,12 @@ const express = require('express');
 // Router
 const router = express.Router();
 
-// API
-router.use('/api/auth', require('./auth'));
+// Routes
+router.use('/api/auth', require('./api/auth'));
+router.use('/api/users', require('./api/users'))
 
-router.use('/api', (_req, res) => res.status.end(404));
-
-// Pages
+router.get('/settings', require('./pages/settings'));
 router.get('/', require('./pages/dashboard'));
-
-router.get('*', require('./pages/error'));
 
 // Export
 module.exports = router;

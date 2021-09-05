@@ -84,6 +84,9 @@ async function main() {
 	// Public Files
 	app.use(express.static(path.resolve(__dirname, '..', 'public')));
 
+	// 404
+	app.use((_req, res) => res.status(404).end());
+
 	// Listen
 	app.listen(port, () => {
 		console.log('Server running at', ('http://localhost:' + port).cyan);

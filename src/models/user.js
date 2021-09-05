@@ -30,7 +30,7 @@ const User = sequelize.define('user', {
 		type: DataTypes.STRING,
 		allowNull: false
 	},
-	admin: {
+	elevated: {
 		type: DataTypes.BOOLEAN,
 		allowNull: false
 	}
