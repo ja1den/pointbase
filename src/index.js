@@ -16,7 +16,7 @@ const passport = require('./lib/passport');
 // Main
 async function main() {
 	// Log
-	const time = Date.now();
+	const startTime = Date.now();
 
 	// Read Port
 	const args = minimist(process.argv.slice(2), { alias: { p: 'port' } });
@@ -29,8 +29,12 @@ async function main() {
 	try {
 		await sequelize.authenticate();
 	} catch (e) {
-		console.error('Sequelize connection failed!'.red, e);
-		return;
+		// Log
+		console.error('Sequelize connection failed!'.red);
+		console.error(e);
+
+		// Exit
+		process.exit(1);
 	}
 
 	// Load Models
@@ -63,22 +67,27 @@ async function main() {
 	app.use(passport.initialize());
 	app.use(passport.session());
 
+	// Pug
+	app.use((req, res, next) => {
+		res.locals.current_url = req.url;
+		next();
+	});
+
+	app.use(express.urlencoded({ extended: true }));
+	app.use(express.json());
+
+	app.set('view engine', 'pug');
+
 	// Load Routes
-	app.use('/api', require('./controllers'));
+	app.use(require('./controllers'));
 
-	// Root Path
-	const root = path.resolve(__dirname, '..', '..', 'client');
-
-	// Root
-	app.use(express.static(root));
-
-	// 404
-	app.use((_req, res) => res.sendFile('index.html', { root }));
+	// Public Files
+	app.use(express.static(path.resolve(__dirname, '..', 'public')));
 
 	// Listen
 	app.listen(port, () => {
 		console.log('Server running at', ('http://localhost:' + port).cyan);
-		console.log(`\u2728  Up in ${Date.now() - time}ms.`.green);
+		console.log(`\u2728  Up in ${Date.now() - startTime}ms.`.green);
 	});
 
 	// Handle Exit

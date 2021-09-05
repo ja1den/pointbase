@@ -2,26 +2,8 @@
 const passport = require('passport');
 const express = require('express');
 
-// Define Routes
+// Router
 const router = express.Router();
-
-// Check Login
-router.get('/', (req, res) => {
-	try {
-		// Logged in?
-		if (req.isAuthenticated()) {
-			res.send(req.user);
-		} else {
-			res.end();
-		}
-	} catch (e) {
-		// Log
-		console.error(e);
-
-		// Respond
-		res.status(500).end();
-	}
-});
 
 // Login
 router.post('/login', (req, res) => {

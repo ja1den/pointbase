@@ -4,8 +4,8 @@ const { DataTypes } = require('sequelize');
 // Lib
 const sequelize = require('../lib/sequelize');
 
-// Define Model
-const ClassSport = sequelize.define('class_sport', {
+// Model
+const Result = sequelize.define('result', {
 	id: {
 		type: DataTypes.INTEGER,
 		primaryKey: true,
@@ -13,15 +13,27 @@ const ClassSport = sequelize.define('class_sport', {
 		unique: true,
 		autoIncrement: true
 	},
-	classId: {
+	eventId: {
 		type: DataTypes.INTEGER,
 		allowNull: false
 	},
 	sportId: {
 		type: DataTypes.INTEGER,
 		allowNull: false
+	},
+	houseId: {
+		type: DataTypes.INTEGER,
+		allowNull: false
+	},
+	userId: {
+		type: DataTypes.INTEGER,
+		allowNull: false
+	},
+	points: {
+		type: DataTypes.INTEGER,
+		allowNull: false
 	}
 }, { sequelize });
 
 // Export
-module.exports = ClassSport;
+module.exports = Result;

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Reset Color
+# Reset
 N='\033[0m'
 
 # Regular Colors

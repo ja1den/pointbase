@@ -1,9 +1,6 @@
 # npm
 node_modules
 
-# build
-build
-
 # environment
 .env
 

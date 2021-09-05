@@ -4,8 +4,8 @@ const { DataTypes } = require('sequelize');
 // Lib
 const sequelize = require('../lib/sequelize');
 
-// Define Model
-const SportType = sequelize.define('sport_type', {
+// Model
+const Event = sequelize.define('event', {
 	id: {
 		type: DataTypes.INTEGER,
 		primaryKey: true,
@@ -18,11 +18,11 @@ const SportType = sequelize.define('sport_type', {
 		allowNull: false,
 		unique: true
 	},
-	description: {
-		type: DataTypes.STRING,
+	active: {
+		type: DataTypes.BOOLEAN,
 		allowNull: false
 	}
 }, { sequelize });
 
 // Export
-module.exports = SportType;
+module.exports = Event;

@@ -2,6 +2,16 @@
 const { Sequelize } = require('sequelize');
 
 // Environment
+if (process.env.DB_HOST === undefined) {
+	console.error('DB_HOST cannot be undefined.'.red);
+	process.exit(1);
+}
+
+if (process.env.DB_PORT === undefined) {
+	console.error('DB_PORT cannot be undefined.'.red);
+	process.exit(1);
+}
+
 if (process.env.DB_NAME === undefined) {
 	console.error('DB_NAME cannot be undefined.'.red);
 	process.exit(1);

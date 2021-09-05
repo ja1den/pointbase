@@ -2,18 +2,33 @@
 	"name": "pointbase",
 	"version": "0.1.0",
 	"private": true,
-	"author": "Jaiden Douglas",
-	"workspaces": [
-		"packages/*"
-	],
+	"author": {
+		"name": "Jaiden Douglas",
+		"url": "https://github.com/ja1den"
+	},
 	"scripts": {
 		"bcrypt": "scripts/bcrypt.sh",
 		"build": "scripts/build.sh",
-		"clean": "rimraf ./**/node_modules",
 		"kill": "scripts/kill.sh",
-		"lint": "sort-package-json package.json packages/*/package.json"
+		"lint": "sort-package-json",
+		"start": "nodemon"
+	},
+	"dependencies": {
+		"bcrypt": "^5.0.1",
+		"colors": "^1.4.0",
+		"express": "^4.17.1",
+		"express-mysql-session": "^2.1.6",
+		"express-session": "^1.17.2",
+		"minimist": "^1.2.5",
+		"mysql2": "^2.3.0",
+		"passport": "^0.4.1",
+		"passport-local": "^1.0.0",
+		"pug": "^3.0.2",
+		"sequelize": "^6.6.5"
 	},
 	"devDependencies": {
+		"dotenv": "^10.0.0",
+		"nodemon": "^2.0.12",
 		"rimraf": "^3.0.2",
 		"sort-package-json": "^1.50.0"
 	}

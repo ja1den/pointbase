@@ -4,8 +4,8 @@ const { DataTypes } = require('sequelize');
 // Lib
 const sequelize = require('../lib/sequelize');
 
-// Define Model
-const Result = sequelize.define('result', {
+// Model
+const House = sequelize.define('house', {
 	id: {
 		type: DataTypes.INTEGER,
 		primaryKey: true,
@@ -13,19 +13,20 @@ const Result = sequelize.define('result', {
 		unique: true,
 		autoIncrement: true
 	},
-	sportId: {
-		type: DataTypes.INTEGER,
+	name: {
+		type: DataTypes.STRING,
+		allowNull: false,
+		unique: true
+	},
+	colour: {
+		type: DataTypes.STRING(6),
 		allowNull: false
 	},
-	studentId: {
-		type: DataTypes.INTEGER,
-		allowNull: false
-	},
-	points: {
-		type: DataTypes.INTEGER,
+	active: {
+		type: DataTypes.BOOLEAN,
 		allowNull: false
 	}
 }, { sequelize });
 
 // Export
-module.exports = Result;
+module.exports = House;

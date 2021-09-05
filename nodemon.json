@@ -3,8 +3,8 @@
 	"watch": [
 		"src"
 	],
-	"ext": "*",
-	"exec": "node -r dotenv/config src/index.js dotenv_config_path=../../.env --port 4000",
+	"ext": "js",
+	"exec": "node -r dotenv/config src/index.js",
 	"quiet": true,
 	"events": {
 		"restart": "echo"
