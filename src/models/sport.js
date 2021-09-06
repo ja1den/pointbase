@@ -18,12 +18,12 @@ const Sport = sequelize.define('sport', {
 		allowNull: false,
 		unique: true
 	},
-	active: {
-		type: DataTypes.BOOLEAN,
-		allowNull: false
-	},
 	sportTypeId: {
 		type: DataTypes.INTEGER,
+		allowNull: false
+	},
+	active: {
+		type: DataTypes.BOOLEAN,
 		allowNull: false
 	}
 }, { sequelize });
