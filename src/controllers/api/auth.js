@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/login', (req, res) => {
 	try {
 		// Login
-		passport.authenticate('local')(req, res, () => res.send(req.user));
+		passport.authenticate('local')(req, res, () => res.send(req.user.name));
 	} catch (e) {
 		// Log
 		console.error(e);
