@@ -1,0 +1,72 @@
+extends includes/layout.pug
+
+block append modals
+	#record-modal.modal.fade(tabindex='-1')
+		.modal-dialog
+			.modal-content
+				.modal-header
+					h5.modal-title Create Event
+					button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+
+				.modal-body
+					form#record-form(novalidate)
+						.mb-3
+							label.form-label(for='record-name') Name
+							input#record-name.form-control(type='text', name='name', required)
+							.invalid-feedback Required.
+
+						.mb-3
+							label.form-label(for='record-colour') Colour
+							input#record-colour.form-control.form-control-color(type='color', name='colour', required)
+							.invalid-feedback Required.
+
+						.mb-3
+							.form-check.form-check-inline
+									input#record-active.form-check-input(type='checkbox' name='active')
+									label.form-check-label(for='record-active') Active
+
+						p.text-danger.mb-0.d-none Duplicate name.
+
+				.modal-footer
+					button.btn.btn-secondary(type='button', data-bs-dismiss='modal') Close
+					button.btn.btn-primary(type='submit', form='record-form') Submit
+
+block content
+	include mixins/link
+
+	h4 Houses
+	p.text-muted Create and manage houses.
+
+	.table-responsive
+		table#record-table.table.table-striped.text-nowrap
+			thead.table-dark
+				tr
+					th(scope='col') Name
+					th(scope='col') Colour
+					th(scope='col') Active
+					th(scope='col', style={ 'width': 0 })
+						a.link-light(href='about:blank', role='button', aria-label='Create Record', data-bs-toggle='modal', data-bs-target='#record-modal'): i.bi.bi-plus-square
+					if records.length > 0
+						th(scope='col', style={ 'width': 0 })
+
+			tbody
+				each record, index in records
+					tr(data-record-id=record.id)
+						td(style={ 'white-space': 'nowrap' })=record.name
+						td(style={ 'color': record.colour })=record.colour
+						td: i.bi(class=record.active ? 'bi-check' : 'bi-dash')
+						td: a.link-dark(href='about:blank', role='button', aria-label='Update Record', data-bs-toggle='modal', data-bs-target='#record-modal', data-record-id=record.id): i.bi.bi-pencil
+						if records.length > 0
+							td: a.link-dark(href='about:blank', role='button', aria-label='Delete Record', data-record-id=record.id): i.bi.bi-trash
+
+	nav.d-flex.align-items-center.pb-1(aria-label='Table Pagination')
+		+link((page === 1)).btn.btn-dark.me-2(href='?page=1', role='button'): i.bi.bi-chevron-double-left
+		+link((page === 1)).btn.btn-dark.me-auto(href='?page=' + (page - 1), role='button'): i.bi.bi-chevron-left
+
+		p.me-auto.mb-0 Page #[strong #{page}] of #[strong #{pages}]
+
+		+link((page === pages)).btn.btn-dark.me-2(href='?page=' + (page + 1), role='button'): i.bi.bi-chevron-right
+		+link((page === pages)).btn.btn-dark(href='?page=' + pages, role='button'): i.bi.bi-chevron-double-right
+
+block append scripts
+	script(src='/js/houses.js')

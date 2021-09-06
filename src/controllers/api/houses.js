@@ -17,7 +17,7 @@ router.post('/', auth, async (req, res) => {
 		if (!req.user.elevated) return res.status(401).end();
 
 		// Create
-		const { id } = await sequelize.models.event.create({ ...req.body });
+		const { id } = await sequelize.models.house.create({ ...req.body });
 
 		// Respond
 		res.status(201).send(id.toString());
@@ -40,7 +40,7 @@ router.post('/', auth, async (req, res) => {
 router.get('/', auth, async (_req, res) => {
 	try {
 		// Find All
-		const records = await sequelize.models.event.findAll();
+		const records = await sequelize.models.house.findAll();
 
 		// Respond
 		res.send(records);
@@ -60,7 +60,7 @@ router.patch('/:id', auth, async (req, res) => {
 		if (!req.user.elevated) return res.status(401).end();
 
 		// Read Record
-		const record = await sequelize.models.event.findByPk(req.params.id);
+		const record = await sequelize.models.house.findByPk(req.params.id);
 
 		// Update Fields
 		for (const key of Object.keys(req.body)) record[key] = req.body[key];
@@ -92,7 +92,7 @@ router.delete('/:id', auth, async (req, res) => {
 		if (!req.user.elevated) return res.status(401).end();
 
 		// Delete
-		await sequelize.models.event.destroy({ where: { id: req.params.id } });
+		await sequelize.models.house.destroy({ where: { id: req.params.id } });
 
 		// Respond
 		res.status(204).end();
