@@ -1,0 +1,2 @@
+mixin link(disabled)
+	a(class={ 'disabled': disabled }, tabindex=disabled && '-1', aria-disabled=disabled && 'true')&attributes(attributes): block

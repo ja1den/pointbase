@@ -1,6 +1,6 @@
 /* ----- Globals ----- */
 
-const baseURL = '/api/users';
+const baseURL = '/api/events';
 
 /* ----- Locate Elements ----- */
 
@@ -21,8 +21,7 @@ const records = [];
 
 document.querySelectorAll('#record-table tbody tr').forEach(element => records[element.dataset.recordId] = [
 	element.children[0].innerHTML,
-	element.children[1].innerHTML,
-	element.children[2].innerHTML.includes('check')
+	element.children[1].innerHTML.includes('check')
 ]);
 
 /* ----- Create and Update ----- */
@@ -37,10 +36,7 @@ createUpdateForm?.addEventListener('submit', async event => {
 		// Read Data
 		const data = Object.fromEntries(new FormData(createUpdateForm).entries());
 
-		// Parse Data
-		if (data.password === '') delete data.password;
-
-		data.elevated = createUpdateForm.querySelector('#record-elevated').checked;
+		data.active = createUpdateForm.querySelector('#record-active').checked;
 
 		// Emit Request
 		let response = null;
@@ -54,7 +50,7 @@ createUpdateForm?.addEventListener('submit', async event => {
 			});
 
 			// Error?
-			if (response.status === 409) return createUpdateForm.showErrorMessage('#record-name, #record-email');
+			if (response.status === 409) return createUpdateForm.showErrorMessage('#record-name');
 			if (response.status !== 201) return;
 		} else {
 			// Update Record
@@ -65,7 +61,7 @@ createUpdateForm?.addEventListener('submit', async event => {
 			});
 
 			// Error?
-			if (response.status === 409) return createUpdateForm.showErrorMessage('#record-name, #record-email');
+			if (response.status === 409) return createUpdateForm.showErrorMessage('#record-name');
 			if (response.status !== 204) return;
 		}
 
@@ -85,19 +81,10 @@ createLink?.addEventListener('click', event => {
 	event.preventDefault();
 
 	// Update Title
-	document.querySelector('#record-modal .modal-title').innerHTML = 'Create User';
+	document.querySelector('#record-modal .modal-title').innerHTML = 'Create Event';
 
 	// Unset Record ID
 	delete createUpdateForm.dataset.recordId;
-
-	// Require Password
-	createUpdateForm.querySelector('#record-password').setAttribute('required', '');
-
-	// Enable Elevated
-	createUpdateForm.querySelector('#record-elevated').removeAttribute('disabled');
-
-	// Hide Popover
-	createUpdateForm.querySelector('label i.bi-info-circle').classList.add('d-none');
 });
 
 /* ----- Update ----- */
@@ -108,20 +95,7 @@ updateLinks.forEach(element => element.addEventListener('click', event => {
 	event.preventDefault();
 
 	// Update Title
-	document.querySelector('#record-modal .modal-title').innerHTML = 'Update User';
-
-	// Unrequire Password
-	createUpdateForm.querySelector('#record-password').removeAttribute('required');
-
-	// Disable Elevated
-	if (element.dataset.current !== undefined) {
-		createUpdateForm.querySelector('#record-elevated').setAttribute('disabled', '');
-	} else {
-		createUpdateForm.querySelector('#record-elevated').removeAttribute('disabled');
-	}
-
-	// Show Popover
-	createUpdateForm.querySelector('label i.bi-info-circle').classList.remove('d-none');
+	document.querySelector('#record-modal .modal-title').innerHTML = 'Update Event';
 
 	// Set Record ID
 	createUpdateForm.dataset.recordId = element.dataset.recordId;
@@ -130,9 +104,8 @@ updateLinks.forEach(element => element.addEventListener('click', event => {
 	const inputs = [...createUpdateForm.getElementsByTagName('input')];
 
 	inputs[0].value = records[element.dataset.recordId][0];
-	inputs[1].value = records[element.dataset.recordId][1];
 
-	inputs[3].checked = records[element.dataset.recordId][2];
+	inputs[1].checked = records[element.dataset.recordId][1];
 }));
 
 /* ----- Delete ----- */

@@ -14,18 +14,11 @@ const router = express.Router();
 // Create
 router.post('/', auth, async (req, res) => {
 	try {
-		// Elevated
+		// Check Role
 		if (!req.user.elevated) return res.status(401).end();
 
-		// Password Length
-		if (req.body.password === undefined) return res.status(400).end();
-		if (req.body.password.length < 5) return res.status(400).end();
-
-		// Bcrypt Hash
-		const hash = await bcrypt.hash(req.body.password, 10);
-
 		// Create
-		const { id } = await sequelize.models.user.create({ ...req.body, password: hash });
+		const { id } = await sequelize.models.event.create({ ...req.body });
 
 		// Respond
 		res.status(201).send(id.toString());
@@ -48,10 +41,10 @@ router.post('/', auth, async (req, res) => {
 router.get('/', auth, async (_req, res) => {
 	try {
 		// Find All
-		const users = await sequelize.models.user.findAll({ attributes: { exclude: ['password'] } });
+		const records = await sequelize.models.event.findAll();
 
 		// Respond
-		res.send(users);
+		res.send(records);
 	} catch (e) {
 		// Log
 		console.error(e);
@@ -65,29 +58,16 @@ router.get('/', auth, async (_req, res) => {
 router.patch('/:id', auth, async (req, res) => {
 	try {
 		// Check Role
-		if (req.user.id === parseInt(req.params.id)) {
-			if (req.body.elevated !== undefined && req.user.elevated !== req.body.elevated) return res.status(403).end();
-		} else {
-			if (!req.user.elevated) return res.status(401).end();
-		}
+		if (!req.user.elevated) return res.status(401).end();
 
 		// Read Record
-		const user = await sequelize.models.user.findByPk(req.params.id);
+		const record = await sequelize.models.event.findByPk(req.params.id);
 
 		// Update Fields
-		for (const key of Object.keys(req.body)) user[key] = req.body[key];
-
-		// Update Password
-		if (req.body.password !== undefined) {
-			// Password Length
-			if (req.body.password.length < 5) return res.status(400).end();
-
-			// Bcrypt Hash
-			user.password = await bcrypt.hash(req.body.password, 10);
-		}
+		for (const key of Object.keys(req.body)) record[key] = req.body[key];
 
 		// Update
-		await user.save();
+		await record.save();
 
 		// Respond
 		res.status(204).end();
@@ -112,11 +92,8 @@ router.delete('/:id', auth, async (req, res) => {
 		// Elevated
 		if (!req.user.elevated) return res.status(401).end();
 
-		// Ignore Current
-		if (req.user.id === parseInt(req.params.id)) return res.status(403).end();
-
 		// Delete
-		await sequelize.models.user.destroy({ where: { id: req.params.id } });
+		await sequelize.models.event.destroy({ where: { id: req.params.id } });
 
 		// Respond
 		res.status(204).end();

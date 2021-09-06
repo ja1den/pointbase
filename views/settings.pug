@@ -1,7 +1,7 @@
 extends includes/layout.pug
 
 block append modals
-	#user-modal.modal.fade(tabindex='-1')
+	#record-modal.modal.fade(tabindex='-1')
 		.modal-dialog
 			.modal-content
 				.modal-header
@@ -9,54 +9,53 @@ block append modals
 					button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
 
 				.modal-body
-					form#user-form(novalidate)
+					form#record-form(novalidate)
 						.mb-3
-							label.form-label(for='user-name') Name
-							input#user-name.form-control(type='text', name='name', required)
-							.invalid-feedback Please enter a name.
+							label.form-label(for='record-name') Name
+							input#record-name.form-control(type='text', name='name', required)
+							.invalid-feedback Required.
 
 						.mb-3
-							label.form-label(for='user-email') Email
-							input#user-email.form-control(type='email', name='email', required)
-							.invalid-feedback Please enter a valid email address.
+							label.form-label(for='record-email') Email
+							input#record-email.form-control(type='email', name='email', required)
+							.invalid-feedback Required.
 
 						.mb-3
-							label.form-label.d-flex.align-items-center(for='user-password')
+							label.form-label.d-flex.align-items-center(for='record-password')
 								p.mb-0 Password&nbsp;
 								i.bi.bi-info-circle(style={ 'font-size': '0.75rem' }, tabindex='0', data-bs-toggle='popover', data-bs-trigger='hover focus', data-bs-content='Leave this field empty to keep the current password.')
-							input#user-password.form-control(type='password', name='password', minlength='5', required)
-							.invalid-feedback Please enter a valid password.
+							input#record-password.form-control(type='password', name='password', minlength='5', required)
+							.invalid-feedback Required.
 
 						.mb-3
 							.form-check.form-check-inline
-									input#user-elevated.form-check-input(type='checkbox' name='elevated')
-									label.form-check-label(for='user-elevated') Elevated
+									input#record-elevated.form-check-input(type='checkbox' name='elevated')
+									label.form-check-label(for='record-elevated') Elevated
 
 						p.text-danger.mb-0.d-none Duplicate name or email.
 
 				.modal-footer
 					button.btn.btn-secondary(type='button', data-bs-dismiss='modal') Close
-					button.btn.btn-primary(type='submit', form='user-form') Submit
+					button.btn.btn-primary(type='submit', form='record-form') Submit
 
 block content
-	mixin link(disabled)
-		a(class={ 'disabled': disabled }, tabindex=disabled && '-1', aria-disabled=disabled && 'true')&attributes(attributes): block
+	include mixins/link
 
 	h4 Settings
-	p.text-muted Manage system accounts.
+	p.text-muted Create and manage system accounts.
 
 	.table-responsive
-		table#user-table.table.table-striped.text-nowrap
+		table#record-table.table.table-striped.text-nowrap
 			thead.table-dark
 				tr
 					th(scope='col') Name
 					th(scope='col') Email
 					th(scope='col') Elevated
-					th(scope='col')
+					th(scope='col', style={ 'width': 0 })
 						if user.elevated
-							a.link-light(href='about:blank', role='button', aria-label='Create Record', data-bs-toggle='modal', data-bs-target='#user-modal'): i.bi.bi-plus-square
-					if user.elevated && 1 < records.length
-						th(scope='col')
+							a.link-light(href='about:blank', role='button', aria-label='Create Record', data-bs-toggle='modal', data-bs-target='#record-modal'): i.bi.bi-plus-square
+					if user.elevated && records.length > 1
+						th(scope='col', style={ 'width': 0 })
 
 			tbody
 				each record, index in records
@@ -64,10 +63,10 @@ block content
 						td(style={ 'white-space': 'nowrap' })=record.name
 						td=record.email
 						td: i.bi(class=record.elevated ? 'bi-check' : 'bi-dash')
-						td(style={ 'width': 0 }): if user.elevated || user.id === record.id
-							a.link-dark(href='about:blank', role='button', aria-label='Update Record', data-bs-toggle='modal', data-bs-target='#user-modal', data-record-id=record.id, data-current=(user.id === record.id)): i.bi.bi-pencil
-						if user.elevated && 1 < records.length
-							td(style={ 'width': 0 }): if user.id !== record.id
+						td: if user.elevated || user.id === record.id
+							a.link-dark(href='about:blank', role='button', aria-label='Update Record', data-bs-toggle='modal', data-bs-target='#record-modal', data-record-id=record.id, data-current=(user.id === record.id)): i.bi.bi-pencil
+						if user.elevated && records.length > 1
+							td: if user.id !== record.id
 								a.link-dark(href='about:blank', role='button', aria-label='Delete Record', data-record-id=record.id): i.bi.bi-trash
 
 	nav.d-flex.align-items-center.pb-1(aria-label='Table Pagination')
