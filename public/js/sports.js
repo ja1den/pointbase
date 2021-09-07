@@ -21,7 +21,7 @@ const records = [];
 
 document.querySelectorAll('#record-table tbody tr').forEach(element => records[element.dataset.recordId] = [
 	element.children[0].innerHTML,
-	element.children[1].innerHTML,
+	element.children[1].dataset.sportTypeId,
 	element.children[2].innerHTML.includes('check')
 ]);
 

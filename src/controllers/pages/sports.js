@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 		// Require Login
 		if (!req.isAuthenticated()) return res.redirect('/');
 
-		// Read Users
+		// Read Records
 		let records = await sequelize.models.sport.findAll().catch(() => res.status(500).send());
 
 		if (records === undefined) return;
@@ -33,8 +33,13 @@ module.exports = async (req, res) => {
 		// Slice
 		records = records.slice((page - 1) * size, page * size);
 
+		// Read Sport Type
+		const sportTypes = await sequelize.models.sport_type.findAll().catch(() => res.status(500).send());
+
+		if (sportTypes === undefined) return;
+
 		// Render HTML
-		res.render('sports', { user: req.user, records, page, pages });
+		res.render('sports', { user: req.user, records, sportTypes, page, pages });
 	} catch (e) {
 		// Log
 		console.error(e);

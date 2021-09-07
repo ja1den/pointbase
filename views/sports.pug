@@ -18,6 +18,8 @@ block append modals
 						.mb-3
 							label.form-label(for='record-colour') Sport Type
 							select#record-sport-type.form-select(name='sportTypeId', required)
+								each sportType in sportTypes
+									option(value=sportType.id)=sportType.name
 							.invalid-feedback Required.
 
 						.mb-3
@@ -53,7 +55,7 @@ block content
 				each record, index in records
 					tr(data-record-id=record.id)
 						td(style={ 'white-space': 'nowrap' })=record.name
-						td=record.sportTypeId
+						td(data-sport-type-id=record.sportTypeId)=sportTypes.find(sportType => sportType.id === record.sportTypeId).name
 						td: i.bi(class=record.active ? 'bi-check' : 'bi-dash')
 						td: a.link-dark(href='about:blank', role='button', aria-label='Update Record', data-bs-toggle='modal', data-bs-target='#record-modal', data-record-id=record.id): i.bi.bi-pencil
 						if records.length > 0

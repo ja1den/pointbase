@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 		// Require Login
 		if (!req.isAuthenticated()) return res.redirect('/');
 
-		// Read Users
+		// Read Records
 		let records = await sequelize.models.event.findAll().catch(() => res.status(500).send());
 
 		if (records === undefined) return;
