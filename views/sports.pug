@@ -33,6 +33,21 @@ block append modals
 					button.btn.btn-secondary(type='button', data-bs-dismiss='modal') Close
 					button.btn.btn-primary(type='submit', form='record-form') Submit
 
+	#help-modal.modal.fade(tabindex='-1')
+		.modal-dialog
+			.modal-content
+				.modal-header
+					h5.modal-title Sport Types
+					button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+
+				.modal-body
+					each sportType in sportTypes
+						h6=sportType.name
+						p !{sportType.description.replace(/(?<=[0-9])[a-z]{2}/g, '<sup>$&</sup>')}
+
+				.modal-footer
+					button.btn.btn-primary(type='button', data-bs-dismiss='modal') Close
+
 block content
 	include mixins/link
 
@@ -45,6 +60,7 @@ block content
 				tr
 					th(scope='col') Name
 					th(scope='col') Sport Type
+						a.link-light.ps-2(href='about:blank', role='button', aria-label='Help', data-bs-toggle='modal', data-bs-target='#help-modal'): i.bi.bi-info-circle(style={ 'font-size': '0.75rem' }, tabindex='0')
 					th(scope='col') Active
 					th(scope='col', style={ 'width': 0 })
 						a.link-light(href='about:blank', role='button', aria-label='Create Record', data-bs-toggle='modal', data-bs-target='#record-modal'): i.bi.bi-plus-square
