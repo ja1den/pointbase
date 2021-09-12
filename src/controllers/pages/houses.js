@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
 		if (!req.isAuthenticated()) return res.redirect('/');
 
 		// Read Records
-		let records = await sequelize.models.house.findAll().catch(() => res.status(500).send());
+		let records = await sequelize.models.house.findAll();
 
 		if (records === undefined) return;
 

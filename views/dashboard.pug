@@ -2,4 +2,35 @@ extends includes/layout.pug
 
 block content
 	h4 Dashboard
-	p.text-muted Results for the current event.
+	p.text-muted Results for each event.
+
+	form#event-form(action='/dashboard', method='GET')
+		.row
+			.col.col-lg-6.mb-3
+				.input-group
+					select.form-select(name='event', aria-label='Event Select')
+						each record in events.sort((a, b) => a.id - b.id)
+							option(value=record.id, selected=record.id === event.id)=record.name
+					button.btn.btn-primary(type='submit') Search
+
+	if houses.length === 0
+		p There are no houses.
+	else
+		.row.row-cols-1.row-cols-sm-2.gy-3.mb-3
+				each house in houses
+					.col-lg
+						.card.text-center(style={ 'border-color': house.colour, 'color': house.colour })
+							.card-body
+								h2.card-title(style={ 'white-space': 'nowrap' })=house.name
+								p.fs-3.mb-0=house.results.reduce((points, result) => points + result.points, 0)
+
+		.row.row-cols-1.row-cols-md-2.gy-3.mb-3
+			.col: .card: .card-body: canvas#chart-1
+			.col: .card: .card-body: canvas#chart-2
+
+block append scripts
+	script.
+		const sportResults = !{JSON.stringify(sportResults, null, 4)};
+		const houses = !{JSON.stringify(houses, null, 4)};
+	
+	script(src='/js/dashboard.js')

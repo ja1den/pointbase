@@ -16,7 +16,7 @@
 		"bcrypt": "^5.0.1",
 		"colors": "^1.4.0",
 		"express": "^4.17.1",
-		"express-mysql-session": "^2.1.6",
+		"express-mysql-session": "^2.1.7",
 		"express-session": "^1.17.2",
 		"minimist": "^1.2.5",
 		"mysql2": "^2.3.0",
@@ -29,6 +29,6 @@
 		"dotenv": "^10.0.0",
 		"nodemon": "^2.0.12",
 		"rimraf": "^3.0.2",
-		"sort-package-json": "^1.50.0"
+		"sort-package-json": "^1.51.0"
 	}
 }

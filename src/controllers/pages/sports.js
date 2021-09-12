@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
 		if (!req.isAuthenticated()) return res.redirect('/');
 
 		// Read Records
-		let records = await sequelize.models.sport.findAll().catch(() => res.status(500).send());
+		let records = await sequelize.models.sport.findAll();
 
 		if (records === undefined) return;
 
@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
 		records = records.slice((page - 1) * size, page * size);
 
 		// Read Sport Type
-		const sportTypes = await sequelize.models.sport_type.findAll().catch(() => res.status(500).send());
+		const sportTypes = await sequelize.models.sport_type.findAll();
 
 		if (sportTypes === undefined) return;
 
