@@ -3,11 +3,8 @@
 # Import
 source $(dirname "$0")/lib/colors.sh
 
-# Read Port
-: ${PORT:=${1:-3000}}
-
 # Locate Process
-PID=$(lsof -ti:$PORT)
+PID=$(lsof -ti:${1-3000})
 
 # Process Found?
 if [ -z $PID ]; then

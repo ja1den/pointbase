@@ -3,7 +3,7 @@
 # Import
 source $(dirname "$0")/lib/colors.sh
 
-# Read Password
+# Empty?
 if [ -z $1 ]; then
 	echo -e "${R}No password provided.${N}"
 	exit 1

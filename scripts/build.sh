@@ -3,7 +3,7 @@
 # Import
 source $(dirname "$0")/lib/colors.sh
 
-# Name Exists?
+# Empty?
 if [ -z $1 ]; then
 	echo -e "${R}No name provided.${N}"
 	exit 1

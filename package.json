@@ -7,10 +7,9 @@
 		"url": "https://github.com/ja1den"
 	},
 	"scripts": {
-		"bcrypt": "scripts/bcrypt.sh",
-		"build": "scripts/build.sh",
-		"kill": "scripts/kill.sh",
+		"build": "npm run script -- b",
 		"lint": "sort-package-json",
+		"script": "bash scripts/index.sh",
 		"start": "nodemon"
 	},
 	"dependencies": {
