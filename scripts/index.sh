@@ -30,7 +30,7 @@ shopt -s nocasematch
 
 case $OPTION in
 	# Build Image
-	b)
+	b | build)
 		# Read Input
 		INPUT=$2
 
@@ -51,7 +51,7 @@ case $OPTION in
 	;;
 
 	# Hash Password
-	h)
+	h | hash)
 		# Read Input
 		INPUT=$2
 
@@ -72,7 +72,7 @@ case $OPTION in
 	;;
 
 	# Kill Port
-	k)
+	k | kill)
 		# Read Input
 		INPUT=$2
 
@@ -99,14 +99,14 @@ case $OPTION in
 	;;
 
 	# Populate Database
-	p)
-		# Log
-		echo -e "${R}Not implemented.${N}"
+	p | populate)
+		# Script
+		node -r dotenv/config $(dirname "$0")/populate.js
 	;;
 
 	# Not Found?
 	*)
 		# Log
-    	echo -e "${R}Script \"$INPUT\" not found.${N}"
+    	echo -e "${R}Script \"$OPTION\" not found.${N}"
     ;;
 esac

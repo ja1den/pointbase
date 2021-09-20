@@ -7,7 +7,7 @@
 		"url": "https://github.com/ja1den"
 	},
 	"scripts": {
-		"build": "npm run script -- b",
+		"build": "bash scripts/index.sh build",
 		"lint": "sort-package-json",
 		"script": "bash scripts/index.sh",
 		"start": "nodemon"
