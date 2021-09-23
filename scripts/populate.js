@@ -105,34 +105,34 @@ async function main() {
 		// Date Range
 		const dateRange = [new Date('2021-09-17T23:30:00.000Z'), new Date('2021-09-18T02:30:00.000Z')];
 
-		const eventId = events.find(event => event.active).id;
-		const userId = users[0].id;
+		// Iterate Events
+		for (const event of events) {
+			// Iterate Houses
+			for (const house of houses) {
+				// Initialise Date
+				let date = new Date(dateRange[0]);
 
-		// Iterate Houses
-		for (const house of houses) {
-			// Initialise Date
-			let date = new Date(dateRange[0]);
+				// Generate Records
+				let records = [];
 
-			// Generate Records
-			let records = [];
+				do {
+					records.push({
+						eventId: event.id,
+						sportId: sports[Math.floor(getRandom() * sports.length)].id,
+						houseId: house.id,
+						userId: users[0].id,
+						points: Math.floor(getRandom() * 3) + 1,
+						createdAt: new Date(date),
+						updatedAt: new Date(date)
+					});
 
-			do {
-				records.push({
-					eventId,
-					sportId: sports[Math.floor(getRandom() * sports.length)].id,
-					houseId: house.id,
-					userId,
-					points: Math.floor(getRandom() * 3) + 1,
-					createdAt: new Date(date),
-					updatedAt: new Date(date)
-				});
+					// Increase Date
+					date.setSeconds(date.getSeconds() + 15);
+				} while (date < dateRange[1]);
 
-				// Increase Date
-				date.setSeconds(date.getSeconds() + 15);
-			} while (date < dateRange[1]);
-
-			// Create Records
-			await sequelize.models.result.bulkCreate(records, { raw: true });
+				// Create Records
+				await sequelize.models.result.bulkCreate(records, { raw: true });
+			}
 		}
 
 		// Close Connection
