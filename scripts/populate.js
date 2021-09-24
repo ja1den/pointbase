@@ -6,11 +6,7 @@ require('colors');
 // Lib
 const sequelize = require('../src/lib/sequelize');
 
-// Random
-const seedRandom = seed => () => {
-	seed = Math.sin(seed) * 10000; return seed - Math.floor(seed);
-}
-const getRandom = seedRandom(42);
+const { random, randomInt } = require('../src/lib/random');
 
 // Main
 async function main() {
@@ -107,6 +103,9 @@ async function main() {
 
 		// Iterate Events
 		for (const event of events) {
+			// House Biases
+			const biases = houses.reduce((biases, house) => ({ ...biases, [house.name]: random(0, 1) - 0.5 }), {});
+
 			// Iterate Houses
 			for (const house of houses) {
 				// Initialise Date
@@ -118,10 +117,10 @@ async function main() {
 				do {
 					records.push({
 						eventId: event.id,
-						sportId: sports[Math.floor(getRandom() * sports.length)].id,
+						sportId: sports[randomInt(0, sports.length)].id,
 						houseId: house.id,
 						userId: users[0].id,
-						points: Math.floor(getRandom() * 3) + 1,
+						points: Math.round(random(1, 3) + biases[house.name]),
 						createdAt: new Date(date),
 						updatedAt: new Date(date)
 					});
