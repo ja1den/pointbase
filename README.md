@@ -49,11 +49,19 @@ npm run lint
 Kill the process on a port (Default: `3000`).
 
 ```sh
-npm run kill -- 4000
+npm run script -- kill 4000
 ```
 
 Hash a password with [Bcrypt](https://en.wikipedia.org/wiki/Bcrypt).
 
 ```sh
-npm run bcrypt -- p4ssw0rd
+npm run script -- hash p4ssw0rd
 ```
+
+Populate the database with pseudorandom data.
+
+```sh
+npm run script -- populate
+```
+
+Note: This clears all existing data.
