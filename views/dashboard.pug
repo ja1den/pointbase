@@ -11,26 +11,49 @@ block content
 					select.form-select(name='event', aria-label='Event Select')
 						each record in events.sort((a, b) => a.id - b.id)
 							option(value=record.id, selected=record.id === event.id)=record.name
-					button.btn.btn-primary(type='submit') Search
+					button.btn.btn-primary(type='submit') Submit
 
 	if houses.length === 0
 		p There are no houses.
 	else
 		.row.row-cols-1.row-cols-sm-2.gy-3.mb-3
-				each house in houses
-					.col-lg
-						.card.text-center(style={ 'border-color': house.colour, 'color': house.colour })
-							.card-body
-								h2.card-title(style={ 'white-space': 'nowrap' })=house.name
-								p.fs-3.mb-0=house.results.reduce((points, result) => points + result.points, 0)
+			each house in [...houses].sort((a, b) => b.get('points') - a.get('points'))
+				.col-lg
+					.card.text-center(style={ 'border-color': house.colour, 'color': house.colour })
+						.card-body
+							h2.card-title(style={ 'white-space': 'nowrap' })=house.name
+							p.fs-3.mb-0=house.get('points') || 0
 
-		.row.row-cols-1.row-cols-md-2.gy-3.mb-3
+		.row.row-cols-1.row-cols-md-2.gy-3.mb-3.d-none.d-sm-flex
 			.col: .card: .card-body: canvas#chart-1
 			.col: .card: .card-body: canvas#chart-2
 
+		.row.gy-3.mb-3
+			.col: .card: .card-body: .table-responsive
+				table.table.table-striped.text-nowrap
+					thead
+						tr
+							th Sport
+							each house in houses
+								th=house.name
+					tbody
+						each entry in Object.entries(sportHouseData)
+							tr
+								td=entry[0]
+								each score in entry[1]
+									td=score
+					tfoot
+						tr
+							td Total
+							each house in houses
+								td=house.get('points') || 0
+
 block append scripts
 	script.
-		const sportResults = !{JSON.stringify(sportResults, null, 4)};
-		const houses = !{JSON.stringify(houses, null, 4)};
-	
+		const interval = !{interval};
+
+		const houses = JSON.parse('!{JSON.stringify(houses)}');
+		const sportHouseData = JSON.parse('!{JSON.stringify(sportHouseData)}');
+		const intervalData = JSON.parse('!{JSON.stringify(intervalData)}');
+
 	script(src='/js/dashboard.js')

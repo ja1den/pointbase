@@ -24,5 +24,8 @@ const SportType = sequelize.define('sport_type', {
 	}
 }, { sequelize });
 
+// Alias
+sequelize.models.sportType = sequelize.models.sport_type;
+
 // Export
 module.exports = SportType;

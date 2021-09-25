@@ -21,37 +21,81 @@ module.exports = async (req, res) => {
 
 		// Read Houses
 		const houses = await sequelize.models.house.findAll({
+			attributes: ['id', 'name', 'colour', [sequelize.cast(sequelize.fn('SUM', sequelize.col('points')), 'SIGNED'), 'points']],
 			include: [
 				{
 					model: sequelize.models.result,
 					required: false,
-					include: [
-						sequelize.models.sport
-					],
+					attributes: [],
 					where: { eventId }
 				}
-			]
+			],
+			group: ['house.name'],
+			order: [[sequelize.col('name')]]
 		});
 
-		// Read Sports
-		const sports = await sequelize.models.sport.findAll({ where: { active: true } });
+		// Results per House per Sport
+		let sportHouseData = await sequelize.models.result.findAll({
+			attributes: [[sequelize.cast(sequelize.fn('SUM', sequelize.col('points')), 'SIGNED'), 'points']],
+			include: [
+				{
+					model: sequelize.models.house,
+					attributes: ['id', 'name']
+				},
+				{
+					model: sequelize.models.sport,
+					attributes: ['id', 'name']
+				}
+			],
+			where: { eventId },
+			group: ['house.name', 'sport.name'],
+			order: [[sequelize.models.sport, 'name'], [sequelize.models.house, 'name']]
+		});
 
-		// Results per Sport
-		const sportResults = sports.reduce(
-			(sportResults, sport) => ({
-				...sportResults,
-				[sport.name]: houses.reduce((houseResults, house) => ({
-					...houseResults, [house.name]: 0
-				}), {})
-			}), {}
-		);
+		// Process Sport Data
+		sportHouseData = sportHouseData.reduce((sportHouseData, record) => {
+			const sportData = sportHouseData[record.sport.name] ?? [];
 
-		for (const house of houses) for (const result of house.results) {
-			if (sportResults[result.sport.name]?.[house.name] !== undefined) sportResults[result.sport.name][house.name] += result.points;
-		}
+			sportData.push(record.points);
+
+			return { ...sportHouseData, [record.sport.name]: sportData };
+		}, {});
+
+		// Interval
+		const interval = 15 * 60;
+
+		// Results per Interval
+		let intervalData = await sequelize.models.result.findAll({
+			attributes: [
+				[sequelize.literal(`FROM_UNIXTIME((UNIX_TIMESTAMP(result.created_at) DIV ${interval} + 1) * ${interval})`), 'interval'],
+				[sequelize.cast(sequelize.fn('SUM', sequelize.col('points')), 'SIGNED'), 'points']
+			],
+			include: [
+				{
+					model: sequelize.models.house,
+					attributes: ['name']
+				}
+			],
+			where: { eventId },
+			group: ['house.name', sequelize.literal(`FROM_UNIXTIME((UNIX_TIMESTAMP(result.created_at) DIV ${interval} + 1) * ${interval})`)],
+			order: [[sequelize.models.house, 'name'], sequelize.col('interval')]
+		});
+
+		// Process Interval Data
+		intervalData = intervalData.reduce((intervalData, record) => {
+			const houseData = intervalData[record.house.name] ?? [];
+
+			if (houseData.length === 0) {
+				houseData.push({ x: new Date(record.get('interval') - interval * 1000), y: 0 });
+			}
+
+			houseData.push({ x: record.get('interval'), y: houseData[houseData.length - 1].y + record.get('points') });
+
+			return { ...intervalData, [record.house.name]: houseData };
+		}, {});
 
 		// Render HTML
-		res.render('dashboard', { user: req.user, events, event, houses, sportResults });
+		res.render('dashboard', { user: req.user, events, event, houses, sportHouseData, interval, intervalData });
 	} catch (e) {
 		// Log
 		console.error(e);
