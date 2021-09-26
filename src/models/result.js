@@ -32,6 +32,10 @@ const Result = sequelize.define('result', {
 	points: {
 		type: DataTypes.INTEGER,
 		allowNull: false
+	},
+	timestamp: {
+		type: DataTypes.DATE,
+		allowNull: false
 	}
 }, { sequelize });
 

@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
 		// Results per Interval
 		let intervalData = await sequelize.models.result.findAll({
 			attributes: [
-				[sequelize.literal(`FROM_UNIXTIME((UNIX_TIMESTAMP(result.created_at) DIV ${interval} + 1) * ${interval})`), 'interval'],
+				[sequelize.literal(`FROM_UNIXTIME((UNIX_TIMESTAMP(result.timestamp) DIV ${interval} + 1) * ${interval})`), 'interval'],
 				[sequelize.cast(sequelize.fn('SUM', sequelize.col('points')), 'SIGNED'), 'points']
 			],
 			include: [
@@ -77,7 +77,7 @@ module.exports = async (req, res) => {
 				}
 			],
 			where: { eventId },
-			group: ['house.name', sequelize.literal(`FROM_UNIXTIME((UNIX_TIMESTAMP(result.created_at) DIV ${interval} + 1) * ${interval})`)],
+			group: ['house.name', sequelize.literal(`FROM_UNIXTIME((UNIX_TIMESTAMP(result.timestamp) DIV ${interval} + 1) * ${interval})`)],
 			order: [[sequelize.models.house, 'name'], sequelize.col('interval')]
 		});
 

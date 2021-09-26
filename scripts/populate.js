@@ -119,10 +119,9 @@ async function main() {
 						eventId: event.id,
 						sportId: sports[randomInt(0, sports.length)].id,
 						houseId: house.id,
-						userId: users[0].id,
 						points: Math.round(random(1, 3) + biases[house.name]),
-						createdAt: new Date(date),
-						updatedAt: new Date(date)
+						timestamp: new Date(date),
+						userId: users[0].id
 					});
 
 					// Increase Date
@@ -130,7 +129,7 @@ async function main() {
 				} while (date < dateRange[1]);
 
 				// Create Records
-				await sequelize.models.result.bulkCreate(records, { raw: true });
+				await sequelize.models.result.bulkCreate(records);
 			}
 		}
 
