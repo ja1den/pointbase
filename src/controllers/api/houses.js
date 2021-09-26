@@ -17,7 +17,7 @@ router.post('/', auth, async (req, res) => {
 		if (!req.user.elevated) return res.status(401).end();
 
 		// Create
-		const { id } = await sequelize.models.house.create({ ...req.body });
+		const { id } = await sequelize.models.house.create(req.body);
 
 		// Respond
 		res.status(201).send(id.toString());
@@ -63,7 +63,7 @@ router.patch('/:id', auth, async (req, res) => {
 		const record = await sequelize.models.house.findByPk(req.params.id);
 
 		// Update Fields
-		for (const key of Object.keys(req.body)) record[key] = req.body[key];
+		for (const key of Object.keys(req.body)) record.set(key, req.body[key]);
 
 		// Update
 		await record.save();

@@ -13,8 +13,6 @@ module.exports = async (req, res) => {
 		// Read Records
 		let records = await sequelize.models.sport.findAll();
 
-		if (records === undefined) return;
-
 		// Total Pages
 		const pages = Math.max(Math.ceil(records.length / size), 1);
 
@@ -33,10 +31,8 @@ module.exports = async (req, res) => {
 		// Slice
 		records = records.slice((page - 1) * size, page * size);
 
-		// Read Sport Type
+		// Read Sport Types
 		const sportTypes = await sequelize.models.sport_type.findAll();
-
-		if (sportTypes === undefined) return;
 
 		// Render HTML
 		res.render('sports', { user: req.user, records, sportTypes, page, pages });

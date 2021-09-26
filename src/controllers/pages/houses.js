@@ -13,8 +13,6 @@ module.exports = async (req, res) => {
 		// Read Records
 		let records = await sequelize.models.house.findAll();
 
-		if (records === undefined) return;
-
 		// Total Pages
 		const pages = Math.max(Math.ceil(records.length / size), 1);
 

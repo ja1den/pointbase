@@ -75,7 +75,7 @@ router.patch('/:id', auth, async (req, res) => {
 		const user = await sequelize.models.user.findByPk(req.params.id);
 
 		// Update Fields
-		for (const key of Object.keys(req.body)) user[key] = req.body[key];
+		for (const key of Object.keys(req.body)) record.set(key, req.body[key]);
 
 		// Update Password
 		if (req.body.password !== undefined) {
@@ -83,7 +83,7 @@ router.patch('/:id', auth, async (req, res) => {
 			if (req.body.password.length < 5) return res.status(400).end();
 
 			// Bcrypt Hash
-			user.password = await bcrypt.hash(req.body.password, 10);
+			user.set('password', await bcrypt.hash(req.body.password, 10));
 		}
 
 		// Update

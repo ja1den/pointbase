@@ -22,7 +22,7 @@ block append modals
 
 						.mb-3
 							.form-check.form-check-inline
-									input#record-active.form-check-input(type='checkbox' name='active')
+									input#record-active.form-check-input(type='checkbox', name='active')
 									label.form-check-label(for='record-active') Active
 
 						p.text-danger.mb-0.d-none Duplicate name.
@@ -52,7 +52,7 @@ block content
 			tbody
 				each record, index in records
 					tr(data-record-id=record.id)
-						td(style={ 'white-space': 'nowrap' })=record.name
+						td=record.name
 						td(style={ 'color': record.colour })=record.colour.toUpperCase()
 						td: i.bi(class=record.active ? 'bi-check' : 'bi-dash')
 						td: a.link-dark(href='about:blank', role='button', aria-label='Update Record', data-bs-toggle='modal', data-bs-target='#record-modal', data-record-id=record.id): i.bi.bi-pencil

@@ -29,7 +29,7 @@ block append modals
 
 						.mb-3
 							.form-check.form-check-inline
-									input#record-elevated.form-check-input(type='checkbox' name='elevated')
+									input#record-elevated.form-check-input(type='checkbox', name='elevated')
 									label.form-check-label(for='record-elevated') Elevated
 
 						p.text-danger.mb-0.d-none Duplicate name or email.
@@ -60,7 +60,7 @@ block content
 			tbody
 				each record, index in records
 					tr(data-record-id=record.id)
-						td(style={ 'white-space': 'nowrap' })=record.name
+						td=record.name
 						td=record.email
 						td: i.bi(class=record.elevated ? 'bi-check' : 'bi-dash')
 						td: if user.elevated || user.id === record.id
