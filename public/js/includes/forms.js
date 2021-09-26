@@ -10,7 +10,7 @@ const forms = document.getElementsByTagName('form');
 
 		form.classList.remove('was-validated');
 
-		form.querySelector('.text-danger').classList.add('d-none');
+		form.querySelector('.text-danger')?.classList.add('d-none');
 	}
 
 	// Show Input Errors

@@ -1,0 +1,92 @@
+extends includes/layout.pug
+
+block append modals
+	#record-modal.modal.fade(tabindex='-1')
+		.modal-dialog
+			.modal-content
+				.modal-header
+					h5.modal-title Create Result
+					button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+
+				.modal-body
+					form#record-form(novalidate)
+						.mb-3
+							label.form-label(for='record-event') Event
+							select#record-event.form-select(name='eventId', required)
+								each event in events
+									option(value=event.id, selected=event.active)=event.name
+							.invalid-feedback Required.
+
+						.mb-3
+							label.form-label(for='record-house') House
+							select#record-house.form-select(name='houseId', required)
+								each house in houses
+									option(value=house.id)=house.name
+							.invalid-feedback Required.
+
+						.mb-3
+							label.form-label(for='record-sport') Sport
+							select#record-sport.form-select(name='sportId', required)
+								each sport in sports
+									option(value=sport.id)=sport.name
+							.invalid-feedback Required.
+
+						.mb-3
+							label.form-label(for='record-points') Points
+							input#record-points.form-control(type='number', name='points', min='0', required)
+							.invalid-feedback Required.
+
+						.mb-3
+							label.form-label(for='record-timestamp') Timestamp
+							input#record-timestamp.form-control(type='datetime-local', name='timestamp', step='1', required)
+							.invalid-feedback Required.
+
+				.modal-footer
+					button.btn.btn-secondary(type='button', data-bs-dismiss='modal') Close
+					button.btn.btn-primary(type='submit', form='record-form') Submit
+
+block content
+	include mixins/link
+
+	h4 Results
+	p.text-muted Create and manage results.
+
+	.table-responsive
+		table#record-table.table.table-striped.text-nowrap
+			thead.table-dark
+				tr
+					th(scope='col') Event
+					th(scope='col') House
+					th(scope='col') Sport
+					th(scope='col') User
+					th(scope='col') Points
+					th(scope='col') Timestamp
+					th(scope='col', style={ 'width': 0 })
+						a.link-light(href='about:blank', role='button', aria-label='Create Record', data-bs-toggle='modal', data-bs-target='#record-modal'): i.bi.bi-plus-square
+					if records.length > 0
+						th(scope='col', style={ 'width': 0 })
+
+			tbody
+				each record, index in records
+					tr(data-record-id=record.id)
+						td(data-event-id=record.eventId)=events.find(event => event.id === record.eventId).name
+						td(data-house-id=record.houseId)=houses.find(house => house.id === record.houseId).name
+						td(data-sport-id=record.sportId)=sports.find(sport => sport.id === record.sportId).name
+						td(data-user-id=record.userId)=users.find(user => user.id === record.userId).name
+						td=record.points
+						td=record.timestamp.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium' })
+						td: a.link-dark(href='about:blank', role='button', aria-label='Update Record', data-bs-toggle='modal', data-bs-target='#record-modal', data-record-id=record.id): i.bi.bi-pencil
+						if records.length > 0
+							td: a.link-dark(href='about:blank', role='button', aria-label='Delete Record', data-record-id=record.id): i.bi.bi-trash
+
+	nav.d-flex.align-items-center.pb-1(aria-label='Table Pagination')
+		+link((page === 1)).btn.btn-dark.me-2(href='?page=1', role='button'): i.bi.bi-chevron-double-left
+		+link((page === 1)).btn.btn-dark.me-auto(href='?page=' + (page - 1), role='button'): i.bi.bi-chevron-left
+
+		p.me-auto.mb-0 Page #[strong #{page}] of #[strong #{pages}]
+
+		+link((page === pages)).btn.btn-dark.me-2(href='?page=' + (page + 1), role='button'): i.bi.bi-chevron-right
+		+link((page === pages)).btn.btn-dark(href='?page=' + pages, role='button'): i.bi.bi-chevron-double-right
+
+block append scripts
+	script(src='/js/results.js')
