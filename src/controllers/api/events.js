@@ -16,8 +16,23 @@ router.post('/', auth, async (req, res) => {
 		// Check Role
 		if (!req.user.elevated) return res.status(401).end();
 
+		// Begin Transaction
+		const transaction = await sequelize.transaction();
+
+		// Active?
+		if (req.body.active) {
+			// Read Events
+			const events = await sequelize.models.event.findAll({ where: { active: true } }, { transaction });
+
+			// Reset Events
+			for (const event of events) await event.set('active', false).save({ transaction });
+		}
+
 		// Create
-		const { id } = await sequelize.models.event.create({ ...req.body });
+		const { id } = await sequelize.models.event.create(req.body, { transaction });
+
+		// Commit
+		await transaction.commit();
 
 		// Respond
 		res.status(201).send(id.toString());
@@ -59,14 +74,29 @@ router.patch('/:id', auth, async (req, res) => {
 		// Check Role
 		if (!req.user.elevated) return res.status(401).end();
 
+		// Begin Transaction
+		const transaction = await sequelize.transaction();
+
 		// Read Record
-		const record = await sequelize.models.event.findByPk(req.params.id);
+		const record = await sequelize.models.event.findByPk(req.params.id, { transaction });
+
+		// Active?
+		if (req.body.active) {
+			// Read Events
+			const events = await sequelize.models.event.findAll({ where: { active: true } }, { transaction });
+
+			// Reset Events
+			for (const event of events) await event.set('active', false).save();
+		}
 
 		// Update Fields
-		for (const key of Object.keys(req.body)) record[key] = req.body[key];
+		for (const key of Object.keys(req.body)) record.set(key, req.body[key]);
 
 		// Update
-		await record.save();
+		await record.save({ transaction });
+
+		// Commit
+		await transaction.commit();
 
 		// Respond
 		res.status(204).end();
