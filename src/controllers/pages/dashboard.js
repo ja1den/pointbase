@@ -1,4 +1,7 @@
 // Import
+const { Op } = require('sequelize');
+
+// Lib
 const sequelize = require('../../lib/sequelize');
 
 // Export Route
@@ -30,6 +33,12 @@ module.exports = async (req, res) => {
 					where: { eventId }
 				}
 			],
+			where: {
+				[Op.or]: [
+					event.active && { active: true },
+					sequelize.where(sequelize.col('points'), { [Op.ne]: 0 })
+				]
+			},
 			group: ['house.name'],
 			order: [[sequelize.col('name')]]
 		});
@@ -52,11 +61,13 @@ module.exports = async (req, res) => {
 			order: [[sequelize.models.sport, 'name'], [sequelize.models.house, 'name']]
 		});
 
-		// Process Sport Data
+		// Process House Sport Data
 		sportHouseData = sportHouseData.reduce((sportHouseData, record) => {
 			const sportData = sportHouseData[record.sport.name] ?? [];
 
-			sportData.push(record.points);
+			const index = houses.findIndex(house => house.name === record.house.name);
+
+			sportData[index] = record.points;
 
 			return { ...sportHouseData, [record.sport.name]: sportData };
 		}, {});
@@ -92,7 +103,7 @@ module.exports = async (req, res) => {
 			houseData.push({ x: record.get('interval'), y: houseData[houseData.length - 1].y + record.get('points') });
 
 			return { ...intervalData, [record.house.name]: houseData };
-		}, {});
+		}, houses.reduce((init, house) => void (init[house.name] = []) ?? init, {}));
 
 		// Render HTML
 		res.render('dashboard', { user: req.user, events, event, houses, sportHouseData, interval, intervalData });

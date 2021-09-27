@@ -8,7 +8,7 @@ block content
 		.row
 			.col.col-lg-6.mb-3
 				.input-group
-					select.form-select(name='event', aria-label='Event Select')
+					select.form-select(name='event', required)
 						each record in events.sort((a, b) => a.id - b.id)
 							option(value=record.id, selected=record.id === event.id)=record.name
 					button.btn.btn-primary(type='submit') Submit
@@ -40,8 +40,8 @@ block content
 						each entry in Object.entries(sportHouseData)
 							tr
 								td=entry[0]
-								each score in entry[1]
-									td=score
+								each _, i in Array(houses.length)
+									td=entry[1][i] || 0
 					tfoot
 						tr
 							td Total
