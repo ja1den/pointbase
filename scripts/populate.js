@@ -83,7 +83,7 @@ async function main() {
 		console.log('Populating sports.');
 
 		// Create Sports
-		const sports = await sequelize.models.sport.bulkCreate([
+		let sports = await sequelize.models.sport.bulkCreate([
 			{ name: 'Launch Board Relay', sportTypeId: sportTypes[1].id, active: true },
 			{ name: 'Bean Bag Toss', sportTypeId: sportTypes[0].id, active: true },
 			{ name: 'Sack Race', sportTypeId: sportTypes[0].id, active: false },
@@ -94,6 +94,8 @@ async function main() {
 			{ name: 'Long Throw', sportTypeId: sportTypes[2].id, active: false },
 			{ name: 'High Jump', sportTypeId: sportTypes[2].id, active: true }
 		]);
+
+		sports = sports.filter(sport => sport.active);
 
 		// Log
 		console.log('Populating results.');
