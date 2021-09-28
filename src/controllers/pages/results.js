@@ -10,11 +10,11 @@ module.exports = async (req, res) => {
 		// Require Login
 		if (!req.isAuthenticated()) return res.redirect('/');
 
-		// Read Records
-		let records = await sequelize.models.result.findAll();
+		// Count Records
+		const count = await sequelize.models.result.count();
 
 		// Total Pages
-		const pages = Math.max(Math.ceil(records.length / size), 1);
+		const pages = Math.ceil(count / size);
 
 		// Requested Page
 		const page = parseFloat(req.query.page);
@@ -28,8 +28,11 @@ module.exports = async (req, res) => {
 
 		if (pages < page) return res.redirect('?page=' + pages);
 
-		// Slice
-		records = records.slice((page - 1) * size, page * size);
+		// Read Records
+		const records = await sequelize.models.result.findAll({
+			limit: size,
+			offset: page * size - size
+		});
 
 		// Read Events
 		const events = await sequelize.models.event.findAll();

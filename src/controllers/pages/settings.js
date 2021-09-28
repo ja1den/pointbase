@@ -10,11 +10,11 @@ module.exports = async (req, res) => {
 		// Require Login
 		if (!req.isAuthenticated()) return res.redirect('/');
 
-		// Read Records
-		let records = await sequelize.models.user.findAll({ attributes: { exclude: ['password'] } });
+		// Count Records
+		const count = await sequelize.models.user.count();
 
 		// Total Pages
-		const pages = Math.max(Math.ceil(records.length / size), 1);
+		const pages = Math.ceil(count / size);
 
 		// Requested Page
 		const page = parseFloat(req.query.page);
@@ -28,8 +28,12 @@ module.exports = async (req, res) => {
 
 		if (pages < page) return res.redirect('?page=' + pages);
 
-		// Slice
-		records = records.slice((page - 1) * size, page * size);
+		// Read Records
+		const records = await sequelize.models.user.findAll({
+			attributes: { exclude: ['password'] },
+			limit: size,
+			offset: page * size - size
+		});
 
 		// Render HTML
 		res.render('settings', { user: req.user, records, page, pages });
