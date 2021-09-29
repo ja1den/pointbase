@@ -7,17 +7,17 @@ const Sport = require('./sport');
 const User = require('./user');
 
 // Associations
-Result.belongsTo(House);
-House.hasMany(Result);
+Result.belongsTo(House, { onDelete: 'cascade' });
+House.hasMany(Result, { onDelete: 'cascade' });
 
-Result.belongsTo(Event);
-Event.hasMany(Result);
+Result.belongsTo(Event, { onDelete: 'cascade' });
+Event.hasMany(Result, { onDelete: 'cascade' });
 
-Result.belongsTo(User);
-User.hasMany(Result);
+Result.belongsTo(User, { onDelete: 'cascade' });
+User.hasMany(Result, { onDelete: 'cascade' });
 
-Sport.belongsTo(SportType);
-SportType.hasMany(Sport);
+Sport.belongsTo(SportType, { onDelete: 'cascade' });
+SportType.hasMany(Sport, { onDelete: 'cascade' });
 
-Result.belongsTo(Sport);
-Sport.hasMany(Result);
+Result.belongsTo(Sport, { onDelete: 'cascade' });
+Sport.hasMany(Result, { onDelete: 'cascade' });

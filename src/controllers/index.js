@@ -15,6 +15,7 @@ router.use('/api/users', require('./api/users'));
 router.get('/dashboard', require('./pages/dashboard'));
 router.get('/events', require('./pages/events'));
 router.get('/houses', require('./pages/houses'));
+router.get('/results_form', require('./pages/results_form'));
 router.get('/results', require('./pages/results'));
 router.get('/settings', require('./pages/settings'));
 router.get('/sports', require('./pages/sports'));

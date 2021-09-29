@@ -1,0 +1,69 @@
+extends includes/layout.pug
+
+block content
+	-
+		function ordinal(i) {
+			const j = i % 10;
+			const k = i % 100;
+
+			if (j == 1 && k != 11) return i + '<sup>st</sup>';
+			if (j == 2 && k != 12) return i + '<sup>nd</sup>';
+			if (j == 3 && k != 13) return i + '<sup>rd</sup>';
+
+			return i + '<sup>th</sup>';
+		}
+
+	h4 Results Form
+	p.text-muted Enter sport results.
+
+	form#event-form(action='/results_form', method='GET')
+		.row
+			.col.col-lg-6.mb-3
+				.input-group
+					select.form-select(name='sport', required)
+						each record in sports.sort((a, b) => a.id - b.id)
+							option(value=record.id, selected=record.id === sport.id)=record.name
+					button.btn.btn-primary(type='submit') Submit
+
+	if houses.length === 0
+		p There are no houses.
+	else
+		form#result-form(data-event-id=event.id, data-sport-id=sport.id, data-sport-type=sport.sport_type.name, novalidate)
+			case sport.sport_type.name
+				when 'House Ranking'
+				when 'House Ranking, plus Bonus'
+					.table-responsive
+						table.table.table-striped.text-nowrap
+							thead
+								tr
+									th Place
+									each house in houses
+										th: p.mb-0(style={ 'color': house.colour })=house.name
+							tbody
+								each _, i in Array(houses.length)
+									tr
+										td !{ordinal(i + 1)}
+										each _, j in Array(houses.length)
+											td
+												input.form-check-input(type='radio', name='places[' + i + ']', value=houses[j].id, required)
+
+								if sport.sport_type.name === 'House Ranking, plus Bonus'
+									tr
+										td.align-middle Bonus
+										each _, j in Array(houses.length)
+											td
+												input.form-control(type='number', name='bonus-' + houses[j].id, min='0', value='0', required)
+
+					p.text-danger.d-none Houses can only place once.
+
+				when 'Student Points'
+					p Student Points
+
+				when 'Placement and Participation'
+					p Placement and Participation
+
+			button.btn.btn-primary.me-2(type='submit') Submit
+			button.btn.btn-secondary(type='reset') Reset
+
+block append scripts
+	script(src='/js/results_form.js')

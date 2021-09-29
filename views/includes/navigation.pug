@@ -1,9 +1,7 @@
--
-	const pageList = user !== undefined
-		? user.elevated
-			? [ { name: 'Dashboard', url: 'dashboard' }, { name: 'Results', url: 'results' }, { name: 'Events', url: 'events' }, { name: 'Houses', url: 'houses' }, { name: 'Sports', url: 'sports' } ]
-			: [ { name: 'Dashboard', url: 'dashboard' } ]
-		: [ { name: 'Dashboard', url: 'dashboard' } ];
+- const pageList = [ { name: 'Dashboard', url: 'dashboard' } ];
+
+- if (user !== undefined) pageList.push({ name: 'Result Form', url: 'results_form' });
+- if (user?.elevated) pageList.push({ name: 'Results', url: 'results' }, { name: 'Events', url: 'events' }, { name: 'Houses', url: 'houses' }, { name: 'Sports', url: 'sports' });
 
 nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
 	.container
