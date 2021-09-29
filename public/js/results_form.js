@@ -56,6 +56,18 @@ resultForm?.addEventListener('submit', async event => {
 						});
 					}
 				}
+				break;
+
+			case 'Student Points':
+				// Push Record
+				records.push({
+					eventId: resultForm.dataset.eventId,
+					sportId: resultForm.dataset.sportId,
+					houseId: parseInt(data.houseId),
+					points: parseInt(data.points),
+					timestamp: new Date()
+				})
+				break;
 		}
 
 		// Iterate Records

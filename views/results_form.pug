@@ -43,21 +43,37 @@ block content
 								each _, i in Array(houses.length)
 									tr
 										td !{ordinal(i + 1)}
-										each _, j in Array(houses.length)
+										each house in houses
 											td
-												input.form-check-input(type='radio', name='places[' + i + ']', value=houses[j].id, required)
+												input.form-check-input(type='radio', name='places[' + i + ']', value=house.id, required)
 
 								if sport.sport_type.name === 'House Ranking, plus Bonus'
 									tr
 										td.align-middle Bonus
-										each _, j in Array(houses.length)
+										each house in houses
 											td
-												input.form-control(type='number', name='bonus-' + houses[j].id, min='0', value='0', required)
+												input.form-control(type='number', name='bonus-' + house.id, min='0', value='0', required)
 
 					p.text-danger.d-none Houses can only place once.
 
 				when 'Student Points'
-					p Student Points
+					.mb-3
+						.row
+							label.form-label(for='record-house') House
+						.row
+							.btn-group(role='group')
+								each house in houses
+									input.btn-check(type='radio', id='house-' + house.id, name='houseId', value=house.id)
+									label.btn.btn-outline-secondary(for='house-' + house.id)=house.name
+
+					.mb-3
+						.row
+							label.form-label(for='record-points') Points
+						.row
+							.btn-group(role='group')
+								each score in [1, 2, 3]
+									input.btn-check(type='radio', id='points-' + score, name='points', value=score)
+									label.btn.btn-outline-secondary(for='points-' + score)=score
 
 				when 'Placement and Participation'
 					p Placement and Participation
