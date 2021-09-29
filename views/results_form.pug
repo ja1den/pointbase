@@ -76,7 +76,25 @@ block content
 									label.btn.btn-outline-secondary(for='points-' + score)=score
 
 				when 'Placement and Participation'
-					p Placement and Participation
+					.table-responsive
+						table.table.table-striped.text-nowrap
+							thead
+								tr
+									th Place
+									each house in houses
+										th: p.mb-0(style={ 'color': house.colour })=house.name
+							tbody
+								each i in [1, 2, 3]
+									tr
+										td !{ordinal(i)}
+										each house in houses
+											td
+												input.form-check-input(type='radio', name='places[' + (i - 1) + ']', value=house.id, required)
+								tr
+									td.align-middle Students
+									each house in houses
+										td
+											input.form-control(type='number', name='bonus-' + house.id, min='0', value='0', required)
 
 			button.btn.btn-primary.me-2(type='submit') Submit
 			button.btn.btn-secondary(type='reset') Reset

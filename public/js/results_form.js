@@ -1,40 +1,44 @@
 /* ----- Locate Elements ----- */
 
 // Form
-const resultForm = document.getElementById('result-form');
+const resultsForm = document.getElementById('result-form');
 
 /* ----- Result Form ----- */
 
 // Handle Submit
-resultForm?.addEventListener('submit', async event => {
+resultsForm?.addEventListener('submit', async event => {
 	// Prevent Default
 	event.preventDefault();
 
 	// Check Form
-	if (resultForm.checkValidity()) {
+	if (resultsForm.checkValidity()) {
 		// Read Data
-		const data = Object.fromEntries(new FormData(resultForm).entries());
+		const data = Object.fromEntries(new FormData(resultsForm).entries());
 
 		// Records
 		const records = [];
 
 		// Switch on Sport Type
-		switch (resultForm.dataset.sportType) {
+		switch (resultsForm.dataset.sportType) {
 			case 'House Ranking':
 			case 'House Ranking, plus Bonus':
+			case 'Placement and Participation':
 				// Parse Fields
 				const places = [];
 
 				for (const key in data) if (key.startsWith('places')) places[parseInt(key.match(/\d+/))] = data[key];
 
 				// Check Places
-				if (new Set(places).size !== places.length) return resultForm.showErrorMessage();
+				if (resultsForm.dataset.sportType !== 'Placement and Participation')
+					if (new Set(places).size !== places.length) return resultsForm.showErrorMessage();
+
+				console.log(places);
 
 				// Push Records
 				for (let i = 0; i < Math.min(places.length, 5); i++) {
 					records.push({
-						eventId: resultForm.dataset.eventId,
-						sportId: resultForm.dataset.sportId,
+						eventId: resultsForm.dataset.eventId,
+						sportId: resultsForm.dataset.sportId,
 						houseId: places[i],
 						points: 5 - i,
 						timestamp: new Date()
@@ -42,14 +46,14 @@ resultForm?.addEventListener('submit', async event => {
 				}
 
 				// Bonus?
-				if (resultForm.dataset.sportType !== 'House Ranking, plus Bonus') break;
+				if (resultsForm.dataset.sportType === 'House Ranking') break;
 
 				// Push Records
 				for (const key in data) {
 					if (key.startsWith('bonus') && data[key] > 0) {
 						records.push({
-							eventId: resultForm.dataset.eventId,
-							sportId: resultForm.dataset.sportId,
+							eventId: resultsForm.dataset.eventId,
+							sportId: resultsForm.dataset.sportId,
 							houseId: parseInt(key.match(/\d+/)),
 							points: data[key],
 							timestamp: new Date()
@@ -61,8 +65,8 @@ resultForm?.addEventListener('submit', async event => {
 			case 'Student Points':
 				// Push Record
 				records.push({
-					eventId: resultForm.dataset.eventId,
-					sportId: resultForm.dataset.sportId,
+					eventId: resultsForm.dataset.eventId,
+					sportId: resultsForm.dataset.sportId,
 					houseId: parseInt(data.houseId),
 					points: parseInt(data.points),
 					timestamp: new Date()
@@ -87,12 +91,12 @@ resultForm?.addEventListener('submit', async event => {
 		history.go();
 	} else {
 		// Show Input Errors
-		resultForm.showInputErrors();
+		resultsForm.showInputErrors();
 	}
 });
 
 // Handle Reset
-resultForm?.addEventListener('reset', () => resultForm?.resetStyles());
+resultsForm?.addEventListener('reset', () => resultsForm?.resetStyles());
 
 /* ----- Radio Buttons ----- */
 
