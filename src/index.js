@@ -7,6 +7,8 @@ const session = require('express-session');
 
 const SessionStore = require('express-mysql-session');
 
+const { Server } = require('socket.io');
+
 require('colors');
 
 // Lib
@@ -53,6 +55,12 @@ async function main() {
 	// Express
 	const app = express().use(express.json());
 
+	// HTTP
+	const http = require('http').createServer(app);
+
+	// Sockets
+	require('./lib/sockets')(new Server(http));
+
 	// Session
 	const connection = (await sequelize.connectionManager.getConnection()).promise();
 
@@ -89,7 +97,7 @@ async function main() {
 	app.use((_req, res) => res.redirect('/'));
 
 	// Listen
-	app.listen(port, () => {
+	http.listen(port, () => {
 		console.log('Server running at', ('http://localhost:' + port).cyan);
 		console.log(`\u2728  Up in ${Date.now() - startTime}ms.`.green);
 	});

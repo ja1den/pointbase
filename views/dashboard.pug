@@ -16,7 +16,7 @@ block content
 	if houses.length === 0
 		p There are no active houses.
 	else
-		.row.row-cols-1.row-cols-sm-2.gy-3.mb-3
+		#cards.row.row-cols-1.row-cols-sm-2.gy-3.mb-3
 			each house in [...houses].sort((a, b) => b.get('points') - a.get('points'))
 				.col-lg
 					.card.text-center(style={ 'border-color': house.colour, 'color': house.colour })
@@ -54,8 +54,8 @@ block append scripts
 	script.
 		const interval = !{interval};
 
-		const houses = JSON.parse('!{JSON.stringify(houses)}');
-		const sportHouseData = JSON.parse('!{JSON.stringify(sportHouseData)}');
-		const intervalData = JSON.parse('!{JSON.stringify(intervalData)}');
+		let houses = JSON.parse('!{JSON.stringify(houses)}');
+		let sportHouseData = JSON.parse('!{JSON.stringify(sportHouseData)}');
+		let intervalData = JSON.parse('!{JSON.stringify(intervalData)}');
 
 	script(src='/js/dashboard.js')

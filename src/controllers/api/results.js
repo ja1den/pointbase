@@ -1,11 +1,19 @@
 // Import
+const path = require('path');
+
 const express = require('express');
+const pug = require('pug');
 
 const { ValidationError } = require('sequelize');
+
+const { parse } = require('node-html-parser');
 
 // Lib
 const sequelize = require('../../lib/sequelize');
 const auth = require('../../middleware/auth');
+
+const io = require('../../lib/sockets');
+const debounce = require('../../lib/debounce');
 
 // Define Routes
 const router = express.Router();
@@ -27,6 +35,9 @@ router.post('/', auth, async (req, res) => {
 
 		// Respond
 		res.status(201).send(id.toString());
+
+		// Socket Update
+		socketUpdate(req.body.eventId);
 	} catch (e) {
 		// Validation
 		if (e instanceof ValidationError) return res.status(400).end();
@@ -73,6 +84,9 @@ router.patch('/:id', auth, async (req, res) => {
 
 		// Respond
 		res.status(204).end();
+
+		// Socket Update
+		socketUpdate(record.eventId);
 	} catch (e) {
 		// Validation
 		if (e instanceof ValidationError) return res.status(400).end();
@@ -91,11 +105,17 @@ router.delete('/:id', auth, async (req, res) => {
 		// Elevated
 		if (!req.user.elevated) return res.status(401).end();
 
+		// Find Record
+		const record = await sequelize.models.result.findOne({ where: { id: req.params.id } });
+
 		// Delete
-		await sequelize.models.result.destroy({ where: { id: req.params.id } });
+		await record.destroy();
 
 		// Respond
 		res.status(204).end();
+
+		// Socket Update
+		socketUpdate(record.eventId);
 	} catch (e) {
 		// Log
 		console.error(e);
@@ -104,6 +124,41 @@ router.delete('/:id', auth, async (req, res) => {
 		res.status(500).end();
 	}
 });
+
+// Dashboard Page
+const dashboardData = require('../pages/dashboard');
+const dashboardPage = pug.compileFile(path.resolve(__dirname, '../../..', 'views', 'dashboard.pug'));
+
+// Socket Update
+const socketUpdate = debounce(async eventId => {
+	// Page Data
+	const data = await new Promise(
+		(resolve, reject) =>
+			dashboardData({ query: { event: eventId } }, { render: (_, data) => resolve(data) }).catch(reject)
+	);
+
+	// Render Page
+	const page = parse(dashboardPage({ current_url: '/dashboard?event' + eventId, ...data }));
+
+	// Update Data
+	const update = [eventId];
+
+	// Cards
+	update.push(page.querySelector('#cards').toString());
+
+	// Chart Data
+	const script = page.querySelector('script:nth-last-of-type(2)').toString();
+
+	const match = script.match(/(?<=JSON\.parse\(').+(?='\))/g);
+
+	update.push(...match.map(match => JSON.parse(match)));
+
+	// Table
+	update.push(page.querySelector('table').toString());
+
+	// Emit Update
+	io.emit('update', update);
+}, 100);
 
 // Export
 module.exports = router;
