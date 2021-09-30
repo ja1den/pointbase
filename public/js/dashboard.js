@@ -1,3 +1,10 @@
+/* ----- Locate Elements ----- */
+
+const chartElements = [
+	document.getElementById('chart-1'),
+	document.getElementById('chart-2')
+];
+
 /* ----- Process Data ----- */
 
 // Convert Dates
@@ -10,7 +17,7 @@ const charts = [];
 
 // Chart 1
 if (Object.keys(sportHouseData).length !== 0) {
-	charts[0] = new Chart(document.getElementById('chart-1'), {
+	charts[0] = new Chart(chartElements[0], {
 		type: 'bar',
 		data: {
 			labels: houses.map(house => house.name),
@@ -41,11 +48,17 @@ if (Object.keys(sportHouseData).length !== 0) {
 
 		}
 	});
+
+	chartElements[0].classList.remove('d-none');
+	chartElements[0].parentElement.querySelector('p').classList.add('d-none');
+} else {
+	chartElements[0].classList.add('d-none');
+	chartElements[0].parentElement.querySelector('p').classList.remove('d-none');
 }
 
 // Chart 2
-if (Object.keys(intervalData).length !== 0) {
-	charts[1] = new Chart(document.getElementById('chart-2'), {
+if (!Object.entries(intervalData).every(entry => entry[1].length === 0)) {
+	charts[1] = new Chart(chartElements[1], {
 		type: 'line',
 		data: {
 			datasets: Object.entries(intervalData).map(entry => ({
@@ -76,6 +89,12 @@ if (Object.keys(intervalData).length !== 0) {
 			animation: false
 		}
 	});
+
+	chartElements[1].classList.remove('d-none');
+	chartElements[1].parentElement.querySelector('p').classList.add('d-none');
+} else {
+	chartElements[1].classList.add('d-none');
+	chartElements[1].parentElement.querySelector('p').classList.remove('d-none');
 }
 
 /* ----- Handle Resize ----- */

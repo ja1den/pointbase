@@ -14,7 +14,7 @@ block content
 					button.btn.btn-primary(type='submit') Submit
 
 	if houses.length === 0
-		p There are no houses.
+		p There are no active houses.
 	else
 		.row.row-cols-1.row-cols-sm-2.gy-3.mb-3
 			each house in [...houses].sort((a, b) => b.get('points') - a.get('points'))
@@ -25,12 +25,14 @@ block content
 							p.fs-3.mb-0=house.get('points') || 0
 
 		.row.row-cols-1.row-cols-md-2.gy-3.mb-3.d-none.d-sm-flex
-			.col: .card: .card-body: canvas#chart-1
-			.col: .card: .card-body: canvas#chart-2
+			each i in [1, 2]
+				.col: .card: .card-body
+					p.d-none.mb-0 There is no data.
+					canvas(id='chart-' + i)
 
 		.row.gy-3.mb-3
 			.col: .card: .card-body: .table-responsive
-				table.table.table-striped.text-nowrap
+				table.table.table-striped.text-nowrap.mb-0
 					thead
 						tr
 							th Sport
