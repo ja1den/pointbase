@@ -33,7 +33,10 @@ if (Object.keys(sportHouseData).length !== 0) {
 			indexAxis: 'y',
 			scales: {
 				x: {
-					stacked: true
+					stacked: true,
+					ticks: {
+						precision: 0
+					}
 				},
 				y: {
 					beginAtZero: true,
@@ -79,6 +82,11 @@ if (!Object.entries(intervalData).every(entry => entry[1].length === 0)) {
 						},
 						unit: 'minute',
 						stepSize: interval / 60
+					}
+				},
+				y: {
+					ticks: {
+						precision: 0
 					}
 				}
 			},
