@@ -6,8 +6,6 @@ const pug = require('pug');
 
 const { ValidationError } = require('sequelize');
 
-const { parse } = require('node-html-parser');
-
 // Lib
 const sequelize = require('../../lib/sequelize');
 const auth = require('../../middleware/auth');
@@ -125,40 +123,8 @@ router.delete('/:id', auth, async (req, res) => {
 	}
 });
 
-// Dashboard Page
-const dashboardData = require('../pages/dashboard');
-const dashboardPage = pug.compileFile(path.resolve(__dirname, '../../..', 'views', 'dashboard.pug'));
-
 // Socket Update
-const socketUpdate = debounce(async eventId => {
-	// Page Data
-	const data = await new Promise(
-		(resolve, reject) =>
-			dashboardData({ query: { event: eventId } }, { render: (_, data) => resolve(data) }).catch(reject)
-	);
-
-	// Render Page
-	const page = parse(dashboardPage({ current_url: '/dashboard?event' + eventId, ...data }));
-
-	// Update Data
-	const update = [eventId];
-
-	// Cards
-	update.push(page.querySelector('#cards').toString());
-
-	// Chart Data
-	const script = page.querySelector('script:nth-last-of-type(2)').toString();
-
-	const match = script.match(/(?<=JSON\.parse\(').+(?='\))/g);
-
-	update.push(...match.map(match => JSON.parse(match)));
-
-	// Table
-	update.push(page.querySelector('table').toString());
-
-	// Emit Update
-	io.emit('update', update);
-}, 100);
+const socketUpdate = debounce(eventId => io.emit('update', String(eventId)), 100);
 
 // Export
 module.exports = router;
