@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
 
 		if (page < 1) return res.redirect('?page=1');
 
-		if (pages < page) return res.redirect('?page=' + pages);
+		if (page > pages) return res.redirect('?page=' + pages);
 
 		// Read Records
 		const records = await sequelize.models.event.findAll({
