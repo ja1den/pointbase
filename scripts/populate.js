@@ -39,7 +39,7 @@ async function main() {
 		await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
 
 		// Log
-		console.log('Populating users.');
+		console.log(`Populating ${'users'.cyan}.`);
 
 		// Create Users
 		const users = await sequelize.models.user.bulkCreate([
@@ -48,7 +48,7 @@ async function main() {
 		]);
 
 		// Log
-		console.log('Populating events.');
+		console.log(`Populating ${'events'.cyan}.`);
 
 		// Create Events
 		const events = await sequelize.models.event.bulkCreate([
@@ -58,7 +58,7 @@ async function main() {
 		]);
 
 		// Log
-		console.log('Populating houses.');
+		console.log(`Populating ${'houses'.cyan}.`);
 
 		// Create Houses
 		const houses = await sequelize.models.house.bulkCreate([
@@ -69,18 +69,18 @@ async function main() {
 		]);
 
 		// Log
-		console.log('Populating sport_types.');
+		console.log(`Populating ${'sport_types'.cyan}.`);
 
 		// Create Houses
 		const sportTypes = await sequelize.models.sportType.bulkCreate([
-			{ name: 'House Ranking', description: 'Each house competes as a team, with 1st receiving 5 points, 2nd receiving 4 points, etc.' },
-			{ name: 'House Ranking, plus Bonus', description: 'House Ranking, but with the ability to add bonus points.' },
+			{ name: 'House Placement', description: 'Each house competes as a team, with 1st receiving 5 points, 2nd receiving 4 points, etc.' },
+			{ name: 'House Placement, plus Bonus', description: 'House Placement, but with the ability to add bonus points.' },
 			{ name: 'Student Points', description: 'Each student receives points based on performance.' },
 			{ name: 'Placement and Participation', description: '1st receives 5 points, 2nd receives 4 points, and 3rd receives 3 points. Each student receives a point for participation.' }
 		]);
 
 		// Log
-		console.log('Populating sports.');
+		console.log(`Populating ${'sports'.cyan}.`);
 
 		// Create Sports
 		let sports = await sequelize.models.sport.bulkCreate([
@@ -98,7 +98,7 @@ async function main() {
 		sports = sports.filter(sport => sport.active);
 
 		// Log
-		console.log('Populating results.');
+		console.log(`Populating ${'results'.cyan}.`);
 
 		// Date Range
 		const dateRange = [new Date('2021-09-17T23:30:00.000Z'), new Date('2021-09-18T02:30:00.000Z')];

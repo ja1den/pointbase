@@ -30,8 +30,8 @@ block content
 	else
 		form#result-form(data-event-id=event.id, data-sport-id=sport.id, data-sport-type=sport.sport_type.name, novalidate)
 			case sport.sport_type.name
-				when 'House Ranking'
-				when 'House Ranking, plus Bonus'
+				when 'House Placement'
+				when 'House Placement, plus Bonus'
 					.table-responsive
 						table.table.table-striped.text-nowrap
 							thead
@@ -47,7 +47,7 @@ block content
 											td
 												input.form-check-input(type='radio', name='places[' + i + ']', value=house.id, required)
 
-								if sport.sport_type.name === 'House Ranking, plus Bonus'
+								if sport.sport_type.name === 'House Placement, plus Bonus'
 									tr
 										td.align-middle Bonus
 										each house in houses

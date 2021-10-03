@@ -20,8 +20,8 @@ resultsForm?.addEventListener('submit', async event => {
 
 		// Switch on Sport Type
 		switch (resultsForm.dataset.sportType) {
-			case 'House Ranking':
-			case 'House Ranking, plus Bonus':
+			case 'House Placement':
+			case 'House Placement, plus Bonus':
 			case 'Placement and Participation':
 				// Parse Fields
 				const places = [];
@@ -31,8 +31,6 @@ resultsForm?.addEventListener('submit', async event => {
 				// Check Places
 				if (resultsForm.dataset.sportType !== 'Placement and Participation')
 					if (new Set(places).size !== places.length) return resultsForm.showErrorMessage();
-
-				console.log(places);
 
 				// Push Records
 				for (let i = 0; i < Math.min(places.length, 5); i++) {
@@ -46,7 +44,7 @@ resultsForm?.addEventListener('submit', async event => {
 				}
 
 				// Bonus?
-				if (resultsForm.dataset.sportType === 'House Ranking') break;
+				if (resultsForm.dataset.sportType === 'House Placement') break;
 
 				// Push Records
 				for (const key in data) {
@@ -70,7 +68,7 @@ resultsForm?.addEventListener('submit', async event => {
 					houseId: parseInt(data.houseId),
 					points: parseInt(data.points),
 					timestamp: new Date()
-				})
+				});
 				break;
 		}
 
