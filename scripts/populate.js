@@ -72,7 +72,7 @@ async function main() {
 		console.log(`Populating ${'sport_types'.cyan}.`);
 
 		// Create Houses
-		const sportTypes = await sequelize.models.sportType.bulkCreate([
+		const sportTypes = await sequelize.models.sport_type.bulkCreate([
 			{ name: 'House Placement', description: 'Each house competes as a team, with 1st receiving 5 points, 2nd receiving 4 points, etc.' },
 			{ name: 'House Placement, plus Bonus', description: 'House Placement, but with the ability to add bonus points.' },
 			{ name: 'Student Points', description: 'Each student receives points based on performance.' },
