@@ -23,7 +23,7 @@ router.post('/', auth, async (req, res) => {
 		res.status(201).send(id.toString());
 	} catch (e) {
 		// Duplicate Record
-		if (e.parent.code === 'ER_DUP_ENTRY') return res.status(409).end();
+		if (e.parent?.code === 'ER_DUP_ENTRY') return res.status(409).end();
 
 		// Validation
 		if (e instanceof ValidationError) return res.status(400).end();
@@ -72,7 +72,7 @@ router.patch('/:id', auth, async (req, res) => {
 		res.status(204).end();
 	} catch (e) {
 		// Duplicate Record
-		if (e.parent.code === 'ER_DUP_ENTRY') return res.status(409).end();
+		if (e.parent?.code === 'ER_DUP_ENTRY') return res.status(409).end();
 
 		// Validation
 		if (e instanceof ValidationError) return res.status(400).end();

@@ -31,7 +31,7 @@ router.post('/', auth, async (req, res) => {
 		res.status(201).send(id.toString());
 	} catch (e) {
 		// Duplicate Record
-		if (e.parent.code === 'ER_DUP_ENTRY') return res.status(409).end();
+		if (e.parent?.code === 'ER_DUP_ENTRY') return res.status(409).end();
 
 		// Validation
 		if (e instanceof ValidationError) return res.status(400).end();
@@ -48,10 +48,10 @@ router.post('/', auth, async (req, res) => {
 router.get('/', auth, async (_req, res) => {
 	try {
 		// Find All
-		const users = await sequelize.models.user.findAll({ attributes: { exclude: ['password'] } });
+		const records = await sequelize.models.user.findAll({ attributes: { exclude: ['password'] } });
 
 		// Respond
-		res.send(users);
+		res.send(records);
 	} catch (e) {
 		// Log
 		console.error(e);
@@ -72,7 +72,7 @@ router.patch('/:id', auth, async (req, res) => {
 		}
 
 		// Read Record
-		const user = await sequelize.models.user.findByPk(req.params.id);
+		const record = await sequelize.models.user.findByPk(req.params.id);
 
 		// Update Fields
 		for (const key of Object.keys(req.body)) record.set(key, req.body[key]);
@@ -83,17 +83,17 @@ router.patch('/:id', auth, async (req, res) => {
 			if (req.body.password.length < 5) return res.status(400).end();
 
 			// Bcrypt Hash
-			user.set('password', await bcrypt.hash(req.body.password, 10));
+			record.set('password', await bcrypt.hash(req.body.password, 10));
 		}
 
 		// Update
-		await user.save();
+		await record.save();
 
 		// Respond
 		res.status(204).end();
 	} catch (e) {
 		// Duplicate Record
-		if (e.parent.code === 'ER_DUP_ENTRY') return res.status(409).end();
+		if (e.parent?.code === 'ER_DUP_ENTRY') return res.status(409).end();
 
 		// Validation
 		if (e instanceof ValidationError) return res.status(400).end();
